@@ -1,3 +1,5 @@
+export APPDIR=$(pwd)
+
 echo Building User Interface
 pyuic4 ui/Application.ui -o py/Application.py
 pyuic4 ui/VidSelect.ui -o py/VidSelect.py

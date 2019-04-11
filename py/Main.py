@@ -68,9 +68,6 @@ class MyApp(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
-        #Full Screen
-        self.showFullScreen()
-        
         #Configure Video Players
         self.video_player_config()
         
@@ -79,6 +76,7 @@ class MyApp(QMainWindow):
         
         #Configure Menu Bar Actions
         self.action_config()
+        self.shortcut_config()
         
         #Status bar
         self.statusbar = QStatusBar()
@@ -87,11 +85,13 @@ class MyApp(QMainWindow):
         #Needed Below lines for future releases
         self.terminal_scrollbar = self.ui.terminal.verticalScrollBar()
         
+        #Configure Close and Minimize Buttons
+        self.right_menu_bar_config()
         
-    def handleFullScreen(self):
-        vid_widget = self.player[0].videoWidget()
-        if vid_widget.isFullScreen():
-            vid_widget.exitFullScreen()
+        #Full Screen (This should be at last of constructor)
+        #Because UI needs to buildup without full screen flag turned on
+        self.showFullScreen()
+        
         
     def video_player_config(self):
         # =====================================================================
@@ -121,17 +121,16 @@ class MyApp(QMainWindow):
         self.ui.full_screen3.pressed.connect(lambda: self.show_full_screen_video(3))
         
         #Full Screen Exit Handler
-        self.close_full_screenSC = QShortcut(self)
-        self.close_full_screenSC.setKey(QKeySequence('Esc'))
-        self.close_full_screenSC.setContext(Qt.ApplicationShortcut)
-        self.close_full_screenSC.activated.connect(self.close_full_screen_video)
+        close_full_screenSC = QShortcut(self)
+        close_full_screenSC.setKey(QKeySequence('Esc'))
+        close_full_screenSC.setContext(Qt.ApplicationShortcut)
+        close_full_screenSC.activated.connect(self.close_full_screen_video)
     
 
     def show_full_screen_video(self,index):
         # =====================================================================
         # Sets Full Screen of particular quadrant
         # =====================================================================
-        self.log('Entering Full screen for Quadrant'+str(index))
         self.player[index].videoWidget().setFullScreen(True)
     
     def close_full_screen_video(self):
@@ -142,7 +141,48 @@ class MyApp(QMainWindow):
             vid_widget_x = x.videoWidget()
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
-        self.log('Closed Full Screens')
+
+    def action_config(self):
+        # =====================================================================
+        # Configures all Actions
+        # =====================================================================
+        self.ui.actionSelect_Stream.triggered.connect(self.vid_select)
+        self.ui.actionMinimize.triggered.connect(lambda : self.showMinimized())
+        self.ui.actionExit.triggered.connect(lambda : self.close())
+        
+    def shortcut_config(self):
+        #Pressing F5 will clear the Application Terminal
+        clear_logSC = QShortcut(self)
+        clear_logSC.setKey(QKeySequence('F5'))
+        clear_logSC.setContext(Qt.ApplicationShortcut)
+        clear_logSC.activated.connect(lambda : self.ui.terminal.clear())
+        
+        
+    def vid_select(self):
+        # =====================================================================
+        # Handler for Select Stream Action
+        # =====================================================================
+        vid_select_dialog = SelectStream(parent = self)
+        vid_select_dialog.exec()
+        
+        for index in range(len(self.video_paths)):
+            if self.video_paths[index]:
+                self.stream_video(index)
+        
+        #Least Delayed Play
+        for x in self.player:
+            x.play()
+                
+    def stream_video(self, q_id):
+        # =====================================================================
+        # Stream Video of Quadrant identified by q_id
+        # =====================================================================
+        self.player[q_id].load(Phonon.MediaSource(self.video_paths[q_id]))
+        
+        #Delay to Load Video
+        time.sleep(0.1)        
+
+    
     
     def log(self, msg):
         # =====================================================================
@@ -160,39 +200,28 @@ class MyApp(QMainWindow):
     @classmethod
     def ui_update(self):
         qApp.processEvents()
-    
-    def action_config(self):
-        # =====================================================================
-        # Configures all Actions
-        # =====================================================================
-        self.ui.actionSelect_Stream.triggered.connect(self.vid_select)
-        self.ui.actionMinimize.triggered.connect(lambda : self.showMinimized())
-        self.ui.actionExit.triggered.connect(lambda : self.close())
-        
-        
-    def vid_select(self):
-        # =====================================================================
-        # Handler for Select Stream Action
-        # =====================================================================
-        vid_select_dialog = SelectStream(parent = self)
-        vid_select_dialog.exec()
-        
-        for index in range(len(self.video_paths)):
-            if self.video_paths[index]:
-                self.stream_video(index)
-        
-        for x in self.player:
-            x.play()
-                
-    def stream_video(self, q_id):
-        # =====================================================================
-        # Stream Video of Quadrant identified by q_id
-        # =====================================================================
-        
-        self.player[q_id].load(Phonon.MediaSource(self.video_paths[q_id]))
-        
-        time.sleep(0.1)        
 
+    def right_menu_bar_config(self):
+        # =====================================================================
+        # Configure Quit and Minimize Buttons
+        # =====================================================================
+        right_menubar = QMenuBar(self.menuBar())
+        
+        #Quit
+        action0 = QAction(QIcon('{}/img/close.png'.format(os.environ['APPDIR'])),'', self)
+        action0.triggered.connect(lambda : self.close())
+        
+        #Minimize
+        action1 = QAction(QIcon('{}/img/minimize.png'.format(os.environ['APPDIR'])),'', self)
+        action1.triggered.connect(lambda : self.showMinimized())
+        
+        #Add actins to Menu Bar
+        right_menubar.addAction(action1)
+        right_menubar.addAction(action0)
+        
+        #Add Menubar to Window
+        self.menuBar().setCornerWidget(right_menubar)
+    
     def closeEvent(self, event):
         # =====================================================================
         # Runs when close button is pressed
@@ -206,6 +235,7 @@ if __name__ == "__main__":
     App = QApplication(sys.argv)
     myapp = MyApp()
     myapp.show()
+    
     shutil.rmtree('./__pycache__',ignore_errors=True)
     sys.exit(App.exec_())
         
