@@ -85,8 +85,8 @@ class MyApp(QMainWindow):
         self.setStatusBar(self.statusbar)
         
         #Needed Below lines for future releases
-        #scrollbar = self.ui.terminal.verticalScrollBar()
-        #scrollbar.setValue(scrollbar.maximum())
+        self.terminal_scrollbar = self.ui.terminal.verticalScrollBar()
+        
         
     def video_player_config(self):
         # =====================================================================
@@ -104,7 +104,15 @@ class MyApp(QMainWindow):
                               self.ui.video_layout1,
                               self.ui.video_layout2,
                               self.ui.video_layout3]
-    
+        
+        for index in range(len(self.player)):
+            self.video_layouts[index].addWidget(self.player[index])
+            
+    def log(self, msg):
+        # =====================================================================
+        # Log on the application Terminal
+        self.ui.terminal.append('>> {}'.format(msg))
+        self.scrollbar.setValue(self.scrollbar.maximum())
     
     def showStatus(self,msg,t=2500):
         # =====================================================================
@@ -146,7 +154,7 @@ class MyApp(QMainWindow):
         # =====================================================================
         
         self.player[q_id].load(Phonon.MediaSource(self.video_paths[q_id]))
-        self.video_layouts[q_id].addWidget(self.player[q_id])
+        
         time.sleep(0.1)        
 
     def closeEvent(self, event):
