@@ -11,6 +11,12 @@
 
 Contributor : Shashank Sharma
 
+## Folder Description
+1. py : Python Files
+2. img : Image Files
+3. res : Resource Files
+4. ui : User Interface XML Files
+
 ## License
 GNU GPL v3.0
 

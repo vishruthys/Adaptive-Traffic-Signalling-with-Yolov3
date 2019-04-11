@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1080</height>
+    <width>1366</width>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>651</width>
-      <height>501</height>
+      <width>441</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
@@ -28,40 +28,29 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>520</y>
-      <width>651</width>
-      <height>501</height>
+      <y>360</y>
+      <width>441</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
    <widget class="QColumnView" name="vid_bg1">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>460</x>
       <y>10</y>
-      <width>651</width>
-      <height>501</height>
+      <width>451</width>
+      <height>341</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>20</y>
-      <width>631</width>
-      <height>481</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="video_layout1"/>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>530</y>
-      <width>631</width>
-      <height>481</height>
+      <x>470</x>
+      <y>370</y>
+      <width>431</width>
+      <height>321</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="video_layout3"/>
@@ -69,20 +58,20 @@
    <widget class="QColumnView" name="vid_bg3">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>520</y>
-      <width>651</width>
-      <height>501</height>
+      <x>460</x>
+      <y>360</y>
+      <width>451</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>1330</x>
+      <x>910</x>
       <y>10</y>
       <width>20</width>
-      <height>1011</height>
+      <height>691</height>
      </rect>
     </property>
     <property name="orientation">
@@ -93,9 +82,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>530</y>
-      <width>631</width>
-      <height>481</height>
+      <y>370</y>
+      <width>421</width>
+      <height>321</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="video_layout2"/>
@@ -105,59 +94,66 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>631</width>
-      <height>481</height>
+      <width>421</width>
+      <height>321</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="video_layout0"/>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
+   <widget class="QTextBrowser" name="terminal">
     <property name="geometry">
      <rect>
-      <x>1360</x>
+      <x>930</x>
       <y>10</y>
-      <width>551</width>
-      <height>1011</height>
+      <width>431</width>
+      <height>691</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(48, 10, 36);
+border-color: rgb(48, 10, 36);
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="html">
      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Hello World]&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ighdof&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ofhgpdf&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;hfh\&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;gh&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;]fgig&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;oigh&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;fsgg]g&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;s&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;]'gg[go&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Manjari'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;APPLICATION LOGGER&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;&amp;gt; User Interface Built Successfully..&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;&amp;gt; Converting Resoures File..&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;&amp;gt; Application Running...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>20</y>
+      <width>431</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="video_layout1"/>
    </widget>
    <zorder>vid_bg0</zorder>
    <zorder>vid_bg3</zorder>
    <zorder>vid_bg2</zorder>
    <zorder>vid_bg1</zorder>
-   <zorder>verticalLayoutWidget_2</zorder>
    <zorder>verticalLayoutWidget_3</zorder>
    <zorder>line</zorder>
    <zorder>verticalLayoutWidget_4</zorder>
    <zorder>verticalLayoutWidget_5</zorder>
-   <zorder>textBrowser</zorder>
+   <zorder>terminal</zorder>
+   <zorder>verticalLayoutWidget_6</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1920</width>
+     <width>1366</width>
      <height>25</height>
     </rect>
    </property>
