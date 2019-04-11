@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>370</y>
       <width>451</width>
-      <height>321</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -31,9 +31,9 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>40</y>
+      <y>10</y>
       <width>451</width>
-      <height>321</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -55,9 +55,9 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>400</y>
+      <y>370</y>
       <width>451</width>
-      <height>321</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -121,19 +121,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <layout class="QVBoxLayout" name="video_layout1"/>
    </widget>
-   <widget class="QColumnView" name="timer_bg2">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>372</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::HLine</enum>
-    </property>
-   </widget>
    <widget class="QLCDNumber" name="lcd_timer2">
     <property name="geometry">
      <rect>
@@ -166,19 +153,6 @@ p, li { white-space: pre-wrap; }
      <enum>QLCDNumber::Filled</enum>
     </property>
    </widget>
-   <widget class="QColumnView" name="timer_bg0">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>12</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::HLine</enum>
-    </property>
-   </widget>
    <widget class="QLCDNumber" name="lcd_timer1">
     <property name="geometry">
      <rect>
@@ -193,19 +167,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="segmentStyle">
      <enum>QLCDNumber::Filled</enum>
-    </property>
-   </widget>
-   <widget class="QColumnView" name="timer_bg1">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>12</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::HLine</enum>
     </property>
    </widget>
    <widget class="QLCDNumber" name="lcd_timer3">
@@ -224,19 +185,6 @@ p, li { white-space: pre-wrap; }
      <enum>QLCDNumber::Filled</enum>
     </property>
    </widget>
-   <widget class="QColumnView" name="timer_bg3">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>372</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::HLine</enum>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget_7">
     <property name="geometry">
      <rect>
@@ -252,9 +200,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>40</y>
+      <y>10</y>
       <width>451</width>
-      <height>321</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -287,11 +235,123 @@ p, li { white-space: pre-wrap; }
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
+   <widget class="QPushButton" name="full_screen0">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/full_screen.png</normaloff>:/icons/img/full_screen.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+1</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="full_screen3">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>380</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/full_screen.png</normaloff>:/icons/img/full_screen.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+4</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="full_screen2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/full_screen.png</normaloff>:/icons/img/full_screen.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+3</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="full_screen1">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>20</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/full_screen.png</normaloff>:/icons/img/full_screen.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+2</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
    <zorder>vid_bg0</zorder>
-   <zorder>timer_bg2</zorder>
-   <zorder>timer_bg0</zorder>
-   <zorder>timer_bg3</zorder>
-   <zorder>timer_bg1</zorder>
    <zorder>vid_bg3</zorder>
    <zorder>vid_bg2</zorder>
    <zorder>vid_bg1</zorder>
@@ -307,6 +367,10 @@ p, li { white-space: pre-wrap; }
    <zorder>verticalLayoutWidget_7</zorder>
    <zorder>line_2</zorder>
    <zorder>line_3</zorder>
+   <zorder>full_screen0</zorder>
+   <zorder>full_screen3</zorder>
+   <zorder>full_screen2</zorder>
+   <zorder>full_screen1</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -351,6 +415,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="AppResources.qrc"/>
+ </resources>
  <connections/>
 </ui>

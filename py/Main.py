@@ -88,6 +88,11 @@ class MyApp(QMainWindow):
         self.terminal_scrollbar = self.ui.terminal.verticalScrollBar()
         
         
+    def handleFullScreen(self):
+        vid_widget = self.player[0].videoWidget()
+        if vid_widget.isFullScreen():
+            vid_widget.exitFullScreen()
+        
     def video_player_config(self):
         # =====================================================================
         # Configure Video Player related Config
@@ -105,14 +110,45 @@ class MyApp(QMainWindow):
                               self.ui.video_layout2,
                               self.ui.video_layout3]
         
+        #Add Player to Layouts
         for index in range(len(self.player)):
             self.video_layouts[index].addWidget(self.player[index])
             
+        #Full Screen Handlers
+        self.ui.full_screen0.pressed.connect(lambda: self.show_full_screen_video(0))
+        self.ui.full_screen1.pressed.connect(lambda: self.show_full_screen_video(1))
+        self.ui.full_screen2.pressed.connect(lambda: self.show_full_screen_video(2))
+        self.ui.full_screen3.pressed.connect(lambda: self.show_full_screen_video(3))
+        
+        #Full Screen Exit Handler
+        self.close_full_screenSC = QShortcut(self)
+        self.close_full_screenSC.setKey(QKeySequence('Esc'))
+        self.close_full_screenSC.setContext(Qt.ApplicationShortcut)
+        self.close_full_screenSC.activated.connect(self.close_full_screen_video)
+    
+
+    def show_full_screen_video(self,index):
+        # =====================================================================
+        # Sets Full Screen of particular quadrant
+        # =====================================================================
+        self.log('Entering Full screen for Quadrant'+str(index))
+        self.player[index].videoWidget().setFullScreen(True)
+    
+    def close_full_screen_video(self):
+        # =====================================================================
+        # Closes Full Screen Video
+        # =====================================================================
+        for x in self.player:
+            vid_widget_x = x.videoWidget()
+            if vid_widget_x.isFullScreen():
+                vid_widget_x.exitFullScreen()
+        self.log('Closed Full Screens')
+    
     def log(self, msg):
         # =====================================================================
         # Log on the application Terminal
         self.ui.terminal.append('>> {}'.format(msg))
-        self.scrollbar.setValue(self.scrollbar.maximum())
+        self.terminal_scrollbar.setValue(self.terminal_scrollbar.maximum())
     
     def showStatus(self,msg,t=2500):
         # =====================================================================
