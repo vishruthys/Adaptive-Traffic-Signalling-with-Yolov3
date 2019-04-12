@@ -25,23 +25,6 @@ class ROI():
         cap.set(cv2.CAP_PROP_POS_FRAMES, 120-1)
         res, self.frame = cap.read()
 
-# =============================================================================
-#     def select_roi(self):
-#         # =====================================================================
-#         # Select ROI of the frame
-#         # =====================================================================
-#         
-#         # Code Used from Core Project
-#         mask = np.ones(self.frame.shape, dtype = "uint8")
-#         points = np.asarray(self.select_points())
-#         points = points.astype(int)
-#         cv2.fillPoly(mask, [points], (255,255,255))
-#         masked_img = cv2.bitwise_and(self.frame, mask)
-#         
-#         #Returns Masked Image after selecting 4 Points
-#         return masked_img
-# =============================================================================
-    
     def select_points(self):
         # =====================================================================
         # Select 4 Points in CW
@@ -61,7 +44,6 @@ class ROI():
         
         #Returns 4 Points
         return co_ords
-
 
 class SelectStream(QDialog):
     def __init__(self, *args,**kwargs):
@@ -139,6 +121,8 @@ class SelectStream(QDialog):
             packed_data['points'] = self.roi_point_list
             packed_data['paths'] = video_paths
             packed_data['widths'] = width
+
+            self.parent.video_paths = video_paths
 
             #Close Dialog Box
             self.reject()
