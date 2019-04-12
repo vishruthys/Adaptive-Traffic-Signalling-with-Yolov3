@@ -28,7 +28,7 @@ def draw_pred(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
 # Load names classes
 options = {"config": "./yolov3.cfg",
-           "weights": "./yolov3.weights",
+           "weights": "/home/vishruthys/Project/yolov3.weights",
            "classes": "./coco.names",
            }
 classes = None

@@ -7,7 +7,7 @@ Created on Mon Mar 25 13:09:40 2019
 """
 #import threading 
 import backend_func
-from fr import detection
+#from fr import detection
 import time  
 
 
@@ -16,11 +16,14 @@ def scan():
     v1,v2,v3,v4=backend_func.detection()
     
     den1=backend_func.density_4(v1,v2,v3,v4,w1)
-
-    den2=backend_func.density_4(v1,v2,v3,v4,w2)
     
+    v1,v2,v3,v4=backend_func.detection()
+    den2=backend_func.density_4(v1,v2,v3,v4,w2)
+
+    v1,v2,v3,v4=backend_func.detection()    
     den3=backend_func.density_4(v1,v2,v3,v4,w3)
     
+    v1,v2,v3,v4=backend_func.detection()
     den4=backend_func.density_4(v1,v2,v3,v4,w4)
     
     return den1,den2,den3,den4
@@ -41,12 +44,17 @@ while True:
         prev_time=init_time
         
         den1,den2,den3,den4=scan()
+        
         etimer= backend_func.exten(den1,den2,den3,den4,i,extn_count,prev_time)
         print('lane '+str(i)+' extension time 1 : '+str(int(etimer))+' secs')
+        
         extn_count=2
-        den1,den2,den3,den4=scan()
-        etimer= backend_func.exten(den1,den2,den3,den4,i,extn_count,prev_time)
-        print('lane '+str(i)+' extension time 2 : '+str(int(etimer))+' secs')    
+        if(etimer!=0):
+            den1,den2,den3,den4=scan()
+            etimer= backend_func.exten(den1,den2,den3,den4,i,extn_count,prev_time)
+            print('lane '+str(i)+' extension time 2 : '+str(int(etimer))+' secs')    
+        else:
+            continue
     i=0
         
         

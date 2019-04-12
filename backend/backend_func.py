@@ -18,7 +18,7 @@ def density_4(c0,c1,c2,c3,wi):
 
 def initial(d0,d1,d2,d3,l):
     total_den=d0+d1+d2+d3
-    
+#    print("total density ",total_den)
     if (l==1):
         it=d0/total_den
     elif (l==2):
@@ -27,7 +27,7 @@ def initial(d0,d1,d2,d3,l):
         it=d2/total_den
     else:
         it=d3/total_den
-        
+#    print("init density ",it)
     return it*100
 
 def exten(d0,d1,d2,d3,l,extn_count,prev_time):#iteration 
@@ -41,27 +41,31 @@ def exten(d0,d1,d2,d3,l,extn_count,prev_time):#iteration
         it=d2
     else:
         it=d3
-        
-    ex=(3*it)/(total_den-it)
-    print(ex)
     
-    if(extn_count==1):
-        ex=20*ex
-        if(ex<=10):
-            ext=10
-        elif (ex>0.5*prev_time):
-            ext=0.5*prev_time
+    ex=(3*it)/(total_den-it)
+    print()
+    print("ex ratio",ex)
+    print()
+    if(ex>=0.9):
+        if(extn_count==1):
+            ex=20*ex
+            if(ex<=10):
+                ext=10
+            elif (ex>0.5*prev_time):
+                ext=0.5*prev_time
+            else:
+                ext=ex
         else:
-            ext=ex
+            ex=15*ex
+            if(ex<=10):
+                ext=10
+            elif (ex>0.25*prev_time):
+                ext=0.25*prev_time
+            else:
+                ext=ex
+        return ext
     else:
-        ex=15*ex
-        if(ex<=10):
-            ext=10
-        elif (ex>0.25*prev_time):
-            ext=0.25*prev_time
-        else:
-            ext=ex
-    return ext
+        return 0
    
 
 def detection():
