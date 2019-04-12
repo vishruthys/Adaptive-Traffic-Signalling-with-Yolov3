@@ -6,20 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>739</width>
-    <height>276</height>
+    <width>812</width>
+    <height>273</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>739</width>
-    <height>276</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>739</width>
-    <height>276</height>
+    <width>809</width>
+    <height>271</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,7 +22,7 @@
   <widget class="QPushButton" name="vid0">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>750</x>
      <y>20</y>
      <width>51</width>
      <height>41</height>
@@ -53,7 +47,7 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>631</width>
+     <width>621</width>
      <height>41</height>
     </rect>
    </property>
@@ -61,7 +55,7 @@
   <widget class="QPushButton" name="vid1">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>750</x>
      <y>70</y>
      <width>51</width>
      <height>41</height>
@@ -84,7 +78,7 @@
   <widget class="QPushButton" name="vid2">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>750</x>
      <y>120</y>
      <width>51</width>
      <height>41</height>
@@ -107,7 +101,7 @@
   <widget class="QPushButton" name="vid3">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>750</x>
      <y>170</y>
      <width>51</width>
      <height>41</height>
@@ -132,7 +126,7 @@
     <rect>
      <x>20</x>
      <y>70</y>
-     <width>631</width>
+     <width>621</width>
      <height>41</height>
     </rect>
    </property>
@@ -142,7 +136,7 @@
     <rect>
      <x>20</x>
      <y>120</y>
-     <width>631</width>
+     <width>621</width>
      <height>41</height>
     </rect>
    </property>
@@ -152,7 +146,7 @@
     <rect>
      <x>20</x>
      <y>170</y>
-     <width>631</width>
+     <width>621</width>
      <height>41</height>
     </rect>
    </property>
@@ -160,7 +154,7 @@
   <widget class="QPushButton" name="ok">
    <property name="geometry">
     <rect>
-     <x>625</x>
+     <x>705</x>
      <y>230</y>
      <width>97</width>
      <height>27</height>
@@ -176,7 +170,7 @@
   <widget class="QPushButton" name="cancel">
    <property name="geometry">
     <rect>
-     <x>520</x>
+     <x>600</x>
      <y>230</y>
      <width>97</width>
      <height>27</height>
@@ -189,9 +183,230 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="crop0">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>20</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select ROI</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/icons/img/crop.png</normaloff>:/icons/img/crop.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>25</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="crop1">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>70</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select ROI</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/icons/img/crop.png</normaloff>:/icons/img/crop.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>25</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="crop2">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>120</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select ROI</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/icons/img/crop.png</normaloff>:/icons/img/crop.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>25</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="crop3">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>170</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select ROI</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/icons/img/crop.png</normaloff>:/icons/img/crop.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>25</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="width0">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>20</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Enter Road Width</string>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>20.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="width1">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>70</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Enter Road Width</string>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>20.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="width2">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>120</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Enter Road Width</string>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>20.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="width3">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>170</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Enter Road Width</string>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>20.000000000000000</double>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="AppResources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cancel</sender>
+   <signal>pressed()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>568</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>369</x>
+     <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
