@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>../img/crop.png</file>
     <file>../img/full_screen.png</file>
     <file>../img/upload_icon.png</file>
   </qresource>

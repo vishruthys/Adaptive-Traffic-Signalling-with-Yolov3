@@ -6,23 +6,84 @@ from VidSelect import Ui_Dialog
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.phonon import Phonon
-import sys,time,os,shutil
+import sys,time,os,shutil,logging
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+class ROI():
+    
+    def __init__(self, video_file):
+        self.video = video_file
+        
+        self.logger = logging.getLogger('my-logger')
+        self.logger.propagate = False
+        
+        #Video Sampler
+        cap = cv2.VideoCapture(self.video)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 120-1)
+        res, self.frame = cap.read()
+
+# =============================================================================
+#     def select_roi(self):
+#         # =====================================================================
+#         # Select ROI of the frame
+#         # =====================================================================
+#         
+#         # Code Used from Core Project
+#         mask = np.ones(self.frame.shape, dtype = "uint8")
+#         points = np.asarray(self.select_points())
+#         points = points.astype(int)
+#         cv2.fillPoly(mask, [points], (255,255,255))
+#         masked_img = cv2.bitwise_and(self.frame, mask)
+#         
+#         #Returns Masked Image after selecting 4 Points
+#         return masked_img
+# =============================================================================
+    
+    def select_points(self):
+        # =====================================================================
+        # Select 4 Points in CW
+        # =====================================================================
+        fig, ax = plt.subplots(figsize = (20, 10))
+        
+        #Plots the Image on the Plot
+        ax.imshow(cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB))
+        
+        ax.set_title('Select Region of Interest')
+        
+        #Select 4 Points on the image
+        co_ords = plt.ginput(4)
+        
+        #Close Plot
+        plt.close()
+        
+        #Returns 4 Points
+        return co_ords
+
 
 class SelectStream(QDialog):
     def __init__(self, *args,**kwargs):
-        QWidget.__init__(self, parent = kwargs.get('parent'))
-        self.ui = Ui_Dialog()
-        self.ui.setupUi(self)
         self.parent = kwargs.get('parent')
         
+        QWidget.__init__(self, parent = self.parent)
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+        
         self.path_edit = [self.ui.videdit0, self.ui.videdit1, self.ui.videdit2, self.ui.videdit3]
+        self.width_edit = [self.ui.width0, self.ui.width1, self.ui.width2, self.ui.width3]
 
         #Configure Buttons
         self.upload_button_config()
         self.button_box_config()
+        self.crop_button_config()
         
         #Temporary Paths
         self.video_paths = [None, None, None, None]
+        
+        #Temporary ROI
+        self.roi_point_list = [None, None, None, None]
         
     def upload_button_config(self):
         # =====================================================================
@@ -34,6 +95,21 @@ class SelectStream(QDialog):
         self.ui.vid2.pressed.connect(lambda: self.file_select(2))
         self.ui.vid3.pressed.connect(lambda: self.file_select(3))
     
+    def crop_button_config(self):
+        self.crop_buttons = [self.ui.crop0, self.ui.crop1, self.ui.crop2, self.ui.crop3]
+        
+        self.ui.crop0.pressed.connect(lambda : self.select_roi(0))
+        self.ui.crop1.pressed.connect(lambda : self.select_roi(1))
+        self.ui.crop2.pressed.connect(lambda : self.select_roi(2))
+        self.ui.crop3.pressed.connect(lambda : self.select_roi(3))
+    
+    def select_roi(self,index):
+        video_file = self.path_edit[index].text()
+        
+        if video_file:
+            roi_selector = ROI(video_file)
+            self.roi_point_list[index] = roi_selector.select_points()
+            
     def button_box_config(self):
         # =====================================================================
         # Configure Ok and Cancel Button
@@ -45,23 +121,37 @@ class SelectStream(QDialog):
         # =====================================================================
         # Handler when Ok Button is clicked
         # =====================================================================
+        video_paths = list()
+        width = list()
+        
         for q_id in range(len(self.path_edit)):
-            self.video_paths[q_id] = self.path_edit[q_id].text()
+            video_paths.append(self.path_edit[q_id].text())
+            width.append(self.width_edit[q_id].value())
+
         
-        # Add Video Paths
-        self.parent.video_paths = self.video_paths
+        #Entering Preset
+        preset, yes = QInputDialog.getInt(self,'Enter Preset','Preset : ', 150, 0, 999)
         
-        #Close Dialog Box
-        self.reject()
+        #If Clicked Ok
+        packed_data = dict()
+        if yes:
+            packed_data['preset'] = preset
+            packed_data['points'] = self.roi_point_list
+            packed_data['paths'] = video_paths
+            packed_data['widths'] = width
+
+            #Close Dialog Box
+            self.reject()
     
     def file_select(self, q_id):
         # =====================================================================
         # Select File When Upload Button is clicked
         # =====================================================================
         path = QFileDialog.getOpenFileName(self)
-        self.path_edit[q_id].setText(path)
+        if path :
+            self.path_edit[q_id].setText(path)
+            self.crop_buttons[q_id].click()
         
-
 class MyApp(QMainWindow):
     def __init__(self,*args,**kwargs):
         QMainWindow.__init__(self,parent = None)
@@ -182,8 +272,6 @@ class MyApp(QMainWindow):
         #Delay to Load Video
         time.sleep(0.1)        
 
-    
-    
     def log(self, msg):
         # =====================================================================
         # Log on the application Terminal
