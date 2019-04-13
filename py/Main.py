@@ -139,7 +139,7 @@ class SelectStream(QDialog):
             packed_data['points'] = self.roi_point_list
             packed_data['paths'] = video_paths
             packed_data['widths'] = width
-
+            self.parent.video_paths = video_paths
             #Close Dialog Box
             self.reject()
     

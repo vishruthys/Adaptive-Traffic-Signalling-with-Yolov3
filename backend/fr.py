@@ -1,5 +1,8 @@
-from sel import VideoSampler
-from sel import Selector
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#from sel import VideoSampler
+#from sel import Selector
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,16 +45,8 @@ COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 # Define network from configuration file and load the weights from the given weights file
 net = cv2.dnn.readNet(options["weights"],options["config"])
     
-def detection():
-    
-    
-    usimage = VideoSampler('./video/t1.mp4',4)
-    
-    image=Selector(usimage)
-    
-    redundimage = cv2.bitwise_xor(usimage, image)
-    
-    
+def detection(image):
+
     
     blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
     Width = image.shape[1]
@@ -65,6 +60,7 @@ def detection():
     boxes = []
     conf_threshold = 0.5
     nms_threshold = 0.4
+    
     car=0
     bike=0
     bus=0
@@ -145,16 +141,16 @@ def detection():
         draw_pred(image, class_ids[j], confidences[j], round(x), round(y), round(x+w), round(y+h))
     
     
-    print("car=",car)
-    print("bike=",bike)
-    print("bus=",bus)
-    print("truck=",truck)
-    print("total=",car+bus+bike+truck)
+#    print("car=",car)
+#    print("bike=",bike)
+#    print("bus=",bus)
+#    print("truck=",truck)
+#    print("total=",car+bus+bike+truck)
     
-    bike=0.5*bike
-    bus=4*bus
-    truck=5*truck
-    print("normalized total=",car+bus+bike+truck)
+#    bike=0.5*bike
+#    bus=4*bus
+#    truck=5*truck
+#    print("normalized total=",car+bus+bike+truck)
     
     #    t, _ = net.getPerfProfile()
     
@@ -170,6 +166,8 @@ def detection():
 #    ax.imshow(cv2.cvtColor(final, cv2.COLOR_BGR2RGB))
 #    plt.show()
     return car,bike,bus,truck
+
+#detection()
     
     
 

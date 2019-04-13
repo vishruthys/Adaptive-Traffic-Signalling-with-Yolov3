@@ -16,39 +16,39 @@ def density_4(c0,c1,c2,c3,wi):
     den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3])/wi
     return den
 
-def initial(d0,d1,d2,d3,l):
+def initial(d0,d1,d2,d3,i,preset_time):
     total_den=d0+d1+d2+d3
 #    print("total density ",total_den)
-    if (l==1):
+    if (i==1):
         it=d0/total_den
-    elif (l==2):
+    elif (i==2):
         it=d1/total_den
-    elif (l==3):
+    elif (i==3):
         it=d2/total_den
     else:
         it=d3/total_den
 #    print("init density ",it)
-    return it*100
+    return it*(0.75*preset_time)
 
-def exten(d0,d1,d2,d3,l,extn_count,prev_time):#iteration 
+def extension(d0,d1,d2,d3,i,extn_count,prev_time,preset_time):#iteration 
     total_den=d0+d1+d2+d3
     
-    if (l==1):
+    if (i==1):
         it=d0
-    elif (l==2):
+    elif (i==2):
         it=d1
-    elif (l==3):
+    elif (i==3):
         it=d2
     else:
         it=d3
     
     ex=(3*it)/(total_den-it)
-    print()
-    print("ex ratio",ex)
-    print()
+    print("")
+    print("exten ratio",ex)
+    print("")
     if(ex>=0.9):
         if(extn_count==1):
-            ex=20*ex
+            ex=0.075*preset_time*ex
             if(ex<=10):
                 ext=10
             elif (ex>0.5*prev_time):
@@ -56,7 +56,7 @@ def exten(d0,d1,d2,d3,l,extn_count,prev_time):#iteration
             else:
                 ext=ex
         else:
-            ex=15*ex
+            ex=0.0375*preset_time*ex
             if(ex<=10):
                 ext=10
             elif (ex>0.25*prev_time):

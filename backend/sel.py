@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,6 +11,7 @@ def cord(newimg):
     x = plt.ginput(4)
     print("clicked", x)
     #plt.show()
+    plt.close()
     return x
 
 def Selector(a):
@@ -36,3 +39,12 @@ def VideoSampler(video,time):
     #ax.imshow(final)
 	#plt.show()
     return final'''
+
+def crop(img,pts):
+    #newimg = cv2.imread("./t18.png")
+    mask = np.ones(img.shape, dtype = "uint8")
+    points=np.asarray(pts)
+    points=points.astype(int)
+    cv2.fillPoly(mask, [points], (255,255,255))
+    cropImg = cv2.bitwise_and(img, mask)
+    return cropImg
