@@ -142,34 +142,9 @@ def detection(image):
         h = box[3]
         draw_pred(image, class_ids[j], confidences[j], round(x), round(y), round(x+w), round(y+h))
     
-    
-#    print("car=",car)
-#    print("bike=",bike)
-#    print("bus=",bus)
-#    print("truck=",truck)
-#    print("total=",car+bus+bike+truck)
-    
-#    bike=0.5*bike
-#    bus=4*bus
-#    truck=5*truck
-#    print("normalized total=",car+bus+bike+truck)
-    
-    #    t, _ = net.getPerfProfile()
-    
-    #label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
-    #cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
-    #cv2.imwrite("f2.jpg", image)
-    #cv2.imshow(window_title,image)
-    #cv2.waitKey(1000)
-    
-#    final=cv2.bitwise_or(image,redundimage)
-#    
-#    fig, ax = plt.subplots(figsize=(20, 10))
-#    ax.imshow(cv2.cvtColor(final, cv2.COLOR_BGR2RGB))
-#    plt.show()
     return car,bike,bus,truck
 
-#detection()
+
     
     
 

@@ -11,10 +11,15 @@ def density_5(c0,c1,c2,c3,c4,wi):
     den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3]+c4*wt[4])/wi
     return den
 
-def density_4(c0,c1,c2,c3,wi):
-    wt=[1,0.5,4,5]#weight preset
-    den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3])/wi
-    return den
+def density_4(vehicle_count, width):
+    wt = [1,0.5,4,5]#weight preset
+
+    density = (vehicle_count[0]*wt[0]+
+           vehicle_count[1]*wt[1]+
+           vehicle_count[2]*wt[2]+
+           vehicle_count[3]*wt[3])/width
+    
+    return density
 
 def initial(d0,d1,d2,d3,l,preset_time):
     total_den=d0+d1+d2+d3
@@ -30,7 +35,7 @@ def initial(d0,d1,d2,d3,l,preset_time):
 #    print("init density ",it)
     return it*(0.75*preset_time)
 
-def exten(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration 
+def extension(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration 
     total_den=d0+d1+d2+d3
     
     if (l==1):
@@ -68,23 +73,4 @@ def exten(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration
         return 0
    
 
-def detection():
-    import random
-    v1=int(10*random.uniform(0.6,1.4))
-    v2=int(10*random.uniform(0.6,1.4))
-    v3=int(10*random.uniform(0.6,1.4))
-    v4=int(10*random.uniform(0.6,1.4))
-    
-    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4))
-    return int(v1),int(v2),int(v3),int(v4)
-
-#def detection():
-#    import random
-#    v1=int(40*random.uniform(0.6,1.4))
-#    v2=int(10*random.uniform(0.6,1.4))
-#    v3=int(20*random.uniform(0.6,1.4))
-#    v4=int(30*random.uniform(0.6,1.4))
-#    v5=int(15*random.uniform(0.6,1.4))
-#    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4)+' a'+str(v5))
-#    return int(v1),int(v2),int(v3),int(v4),int(v5)
         

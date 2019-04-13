@@ -12,6 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+from BackendAPI import Backend
+
 class ROI():
     
     def __init__(self, video_file):
@@ -122,7 +124,7 @@ class SelectStream(QDialog):
             packed_data['paths'] = video_paths
             packed_data['widths'] = width
 
-            self.parent.video_paths = video_paths
+            self.parent.data = packed_data
 
             #Close Dialog Box
             self.reject()
@@ -137,6 +139,7 @@ class SelectStream(QDialog):
             self.crop_buttons[q_id].click()
         
 class MyApp(QMainWindow):
+    
     def __init__(self,*args,**kwargs):
         QMainWindow.__init__(self,parent = None)
         self.ui = Ui_MainWindow()
@@ -144,11 +147,8 @@ class MyApp(QMainWindow):
         
         #Configure Video Players
         self.video_player_config()
-        
-        #Array of Paths (None Indicates Path Unknown)
-        self.video_paths = [None,None,None,None]
-        
-        #Configure Menu Bar Actions
+
+        #Configure Menu Bar Actions and Shortcuts
         self.action_config()
         self.shortcut_config()
         
@@ -166,11 +166,37 @@ class MyApp(QMainWindow):
         #Because UI needs to buildup without full screen flag turned on
         self.showFullScreen()
         
+        #Create a Backend Thread
+        self.backend = Backend()
         
+        #Connect Backend Thread to UI via signal SBS
+        self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
+        
+    
+    def SBS_frontend_update(self, signal):
+        # =====================================================================
+        # Updates Frontend Whenever tje signal SBS is emitted
+        # =====================================================================
+        self.log('''
+                 Lane : {}
+                 Initial Time Calculated : {}
+                 Extenstion Number : {}
+                 Extension Time : {}
+                 '''.format(
+                 signal['lane'],
+                 signal['lane_time'],
+                 signal['ext_number'],
+                 signal['ext_time']))
+    
+        #Write Log
+    
     def video_player_config(self):
         # =====================================================================
         # Configure Video Player related Config
         # =====================================================================
+        
+        #Array of Paths (None Indicates Path Unknown)
+        self.video_paths = [None,None,None,None]
         
         #Array of Players and Layouts
         self.player = [Phonon.VideoPlayer(Phonon.VideoCategory,self),
@@ -200,6 +226,8 @@ class MyApp(QMainWindow):
         close_full_screenSC.setContext(Qt.ApplicationShortcut)
         close_full_screenSC.activated.connect(self.close_full_screen_video)
     
+        #LCD Timer Configuration
+        self.lcd_timers = [self.ui.lcd_timer0, self.ui.lcd_timer1, self.ui.lcd_timer2, self.ui.lcd_timer3]
 
     def show_full_screen_video(self,index):
         # =====================================================================
@@ -215,6 +243,99 @@ class MyApp(QMainWindow):
             vid_widget_x = x.videoWidget()
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
+   
+    def vid_select(self):
+        # =====================================================================
+        # Handler for Select Stream Action
+        # =====================================================================
+        
+        vid_select_dialog = SelectStream(parent = self)
+        vid_select_dialog.exec()
+  
+        #Written in Try-Except Block to handle Cancel Button Click
+        try :
+            
+            self.backend_thread.pre_run(self.data)
+            
+            #Set Paths for Video Player
+            self.video_paths = self.data['paths']
+            
+            #Load Video
+            self.show_status('Loading...', 1500)
+            for index in range(len(self.video_paths)):
+                if self.video_paths[index]:
+                    self.stream_video(index)
+            
+            #Starts Backend Thread
+            self.backend_thread.start()
+            
+            #Least Delayed Play
+            for x in self.player:
+                x.play()
+        
+        except:
+            pass
+                
+    def stream_video(self, q_id):
+        # =====================================================================
+        # Stream Video of Quadrant identified by q_id
+        # =====================================================================
+        self.player[q_id].load(Phonon.MediaSource(self.video_paths[q_id]))
+        
+        #Delay to Load Video
+        time.sleep(0.1)        
+
+    def create_lcd_timer(self, countdown, index):
+        # =====================================================================
+        # Start LCD Timer
+        # =====================================================================
+        
+        #Same Timer for Index and Index+1 (Traffic Color Change)
+        self.lcd_timers[index].display(countdown)
+        self.lcd_timers[(index+1)%4].display(countdown)
+        
+        #Create a Timer
+        self.timer = QTimer()
+        
+        #Set Start time
+        self.start_time = countdown
+        
+        #For every second update LCD
+        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(index))
+       
+        #Start Timer
+        self.timer.start(1000)
+
+    def update_lcd_timer_value(self,index):
+        # =====================================================================
+        # Called Every second when timer is running : Updates LCD
+        # =====================================================================
+        
+        self.start_time -= 1
+        if self.start_time >= 0 :
+            self.lcd_timers[index].display(self.start_time)
+            self.lcd_timers[(index+1)%4].display(self.start_time)
+        
+        if self.start_time == 0:
+            self.timer.stop()
+            self.log('DONE')
+        
+    def log(self, msg):
+        # =====================================================================
+        # Log on the application Terminal
+        self.ui.terminal.append('>> {}'.format(msg))
+        self.terminal_scrollbar.setValue(self.terminal_scrollbar.maximum())
+    
+    def show_status(self,msg,t=2500):
+        # =====================================================================
+        # Show Status Messages for t milliseconds
+        # =====================================================================
+        self.statusbar.showMessage(msg,t)
+        self.ui_update()
+        
+    @classmethod
+    def ui_update(self):
+        qApp.processEvents()
 
     def action_config(self):
         # =====================================================================
@@ -231,48 +352,6 @@ class MyApp(QMainWindow):
         clear_logSC.setContext(Qt.ApplicationShortcut)
         clear_logSC.activated.connect(lambda : self.ui.terminal.clear())
         
-        
-    def vid_select(self):
-        # =====================================================================
-        # Handler for Select Stream Action
-        # =====================================================================
-        vid_select_dialog = SelectStream(parent = self)
-        vid_select_dialog.exec()
-        
-        for index in range(len(self.video_paths)):
-            if self.video_paths[index]:
-                self.stream_video(index)
-        
-        #Least Delayed Play
-        for x in self.player:
-            x.play()
-                
-    def stream_video(self, q_id):
-        # =====================================================================
-        # Stream Video of Quadrant identified by q_id
-        # =====================================================================
-        self.player[q_id].load(Phonon.MediaSource(self.video_paths[q_id]))
-        
-        #Delay to Load Video
-        time.sleep(0.1)        
-
-    def log(self, msg):
-        # =====================================================================
-        # Log on the application Terminal
-        self.ui.terminal.append('>> {}'.format(msg))
-        self.terminal_scrollbar.setValue(self.terminal_scrollbar.maximum())
-    
-    def showStatus(self,msg,t=2500):
-        # =====================================================================
-        # Show Status Messages for t milliseconds
-        # =====================================================================
-        self.statusbar.showMessage(msg,t)
-        self.ui_update()
-        
-    @classmethod
-    def ui_update(self):
-        qApp.processEvents()
-
     def right_menu_bar_config(self):
         # =====================================================================
         # Configure Quit and Minimize Buttons
