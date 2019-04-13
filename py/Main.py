@@ -172,6 +172,9 @@ class MyApp(QMainWindow):
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         
+        
+        #Create a Timer
+        self.timer = QTimer()
     
     def SBS_frontend_update(self, signal):
         # =====================================================================
@@ -187,6 +190,15 @@ class MyApp(QMainWindow):
                  signal['lane_time'],
                  signal['ext_number'],
                  signal['ext_time']))
+        
+        if signal[ext_number] == 0:
+            self.create_lcd_timer(signal['lane_time'], signal['lane'])
+        elif signal[ext_number] == 1:
+            self.timer.stop()
+            self.create_lcd_timer(self.start_time + signal['ext_time'], signal['lane'])
+        else:
+            self.timer.stop()
+            self.create_lcd_timer(self.start_time + signal['ext_time'], signal['lane'])
     
         #Write Log
     
@@ -256,7 +268,7 @@ class MyApp(QMainWindow):
         try :
             
             self.backend_thread.pre_run(self.data)
-            
+        
             #Set Paths for Video Player
             self.video_paths = self.data['paths']
             
@@ -293,9 +305,6 @@ class MyApp(QMainWindow):
         #Same Timer for Index and Index+1 (Traffic Color Change)
         self.lcd_timers[index].display(countdown)
         self.lcd_timers[(index+1)%4].display(countdown)
-        
-        #Create a Timer
-        self.timer = QTimer()
         
         #Set Start time
         self.start_time = countdown
