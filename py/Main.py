@@ -12,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-from BackendAPI import Backend
+#from BackendAPI import Backend
 
 class ROI():
     
@@ -167,10 +167,10 @@ class MyApp(QMainWindow):
         self.showFullScreen()
         
         #Create a Backend Thread
-        self.backend = Backend()
+        #self.backend = Backend()
         
         #Connect Backend Thread to UI via signal SBS
-        self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
+        #self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         
     
     def SBS_frontend_update(self, signal):
@@ -255,8 +255,8 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
         try :
             
-            self.backend_thread.pre_run(self.data)
-            
+            #self.backend_thread.pre_run(self.data)
+        
             #Set Paths for Video Player
             self.video_paths = self.data['paths']
             
@@ -267,7 +267,7 @@ class MyApp(QMainWindow):
                     self.stream_video(index)
             
             #Starts Backend Thread
-            self.backend_thread.start()
+            #self.backend_thread.start()
             
             #Least Delayed Play
             for x in self.player:
