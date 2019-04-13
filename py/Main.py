@@ -123,9 +123,13 @@ class SelectStream(QDialog):
             packed_data['points'] = self.roi_point_list
             packed_data['paths'] = video_paths
             packed_data['widths'] = width
+<<<<<<< HEAD
+            self.parent.video_paths = video_paths
+=======
 
             self.parent.data = packed_data
 
+>>>>>>> 2e765001f45b8773bd2e8a3d8889439e4b4840fa
             #Close Dialog Box
             self.reject()
     
