@@ -25,10 +25,10 @@ class Backend(QThread):
         self.preset_time = dict_front['preset']
         self.width = dict_front['widths']
 
-        self.img=[crop(VideoSampler(vidPath[0],4),self.pts[0]),
-             crop(VideoSampler(vidPath[1],1),self.pts[1]),
-             crop(VideoSampler(vidPath[2],6),self.pts[2]),
-             crop(VideoSampler(vidPath[3],8),self.pts[3])]
+        self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
+             crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
+             crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
+             crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
 
     def construct_signal(self, lane, lane_time, ext_number = 0, ext_time = 0):
         signal = {'lane': lane, 
@@ -59,7 +59,7 @@ class Backend(QThread):
                 
                 #Thread sleeps for init_time-7 seconds
                 if init_time > 8 :
-                    self.sleep((int(init_time)-7))
+                    self.sleep((int(init_time)-7)+3)
                 
                 extn_count = 1
                 
@@ -86,6 +86,10 @@ class Backend(QThread):
                     
                     self.emit(SIGNAL('SBS'), 
                           self.construct_signal(i-1, int(init_time), extn_count, int(etimer))) 
+                else:
+                    continue
+            i=0
+        return 0
                     
                     #Change to Logger in UI
                     #print('lane '+str(i)+' extension time 2 : '+str(int(etimer))+' secs')    
@@ -93,19 +97,19 @@ class Backend(QThread):
 
 def scan(img,width):
     vehicle_count = detection(img[0])
-    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4))
+    print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
     den1 = density_4(vehicle_count, width[0])
     
     vehicle_count = detection(img[1])
-    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4))
+    print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
     den2 = density_4(vehicle_count, width[1])
 
     vehicle_count = detection(img[2])  
-    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4))
+    print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
     den3 = density_4(vehicle_count, width[2])
     
     vehicle_count = detection(img[3])
-    print('c'+str(v1)+' m'+str(v2)+' b'+str(v3)+' t'+str(v4))
+    print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
     den4 = density_4(vehicle_count, width[3])
     
     return den1,den2,den3,den4
