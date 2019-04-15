@@ -12,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-#from BackendAPI import Backend
+from BackendAPI import Backend
 
 class ROI():
     
@@ -168,10 +168,10 @@ class MyApp(QMainWindow):
         self.showFullScreen()
         
         #Create a Backend Thread
-        #self.backend = Backend()
+        self.backend = Backend()
         
         #Connect Backend Thread to UI via signal SBS
-        #self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
+        self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         
         self.traffic_index = -1
         
@@ -285,9 +285,6 @@ class MyApp(QMainWindow):
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
    
-    def mouseDoubleClickEvent(self, mouse_event):
-        print(1)
-        self.close_full_screen_video()
     
     def vid_select(self):
         # =====================================================================
@@ -300,13 +297,12 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            #self.backend.pre_run(self.data)
+            self.backend.pre_run(self.data)
             
             #Starts Backend Thread
-            #self.backend.start() 
+            self.backend.start() 
             pass
-           
-    
+
         #Set Paths for Video Player
         finally:
             self.video_paths = self.data['paths']
@@ -325,7 +321,7 @@ class MyApp(QMainWindow):
     @classmethod   
     def qimg2cv(self, q_img):
         # =====================================================================
-        # Converts QImage to OpenCV Format
+        # Converts QImage to OpenCV Format (WILL BE USED IN THE FUTURE)
         # =====================================================================
         q_img.save('temp.png', 'png')
         mat = cv2.imread('temp.png')
