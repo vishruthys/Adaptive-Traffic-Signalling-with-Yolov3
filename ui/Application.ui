@@ -150,6 +150,9 @@ p, li { white-space: pre-wrap; }
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
     <property name="smallDecimalPoint">
      <bool>true</bool>
     </property>
@@ -210,7 +213,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::HLine</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
    </widget>
    <widget class="Line" name="line_2">
