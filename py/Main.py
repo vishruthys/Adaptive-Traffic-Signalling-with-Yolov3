@@ -194,13 +194,17 @@ class MyApp(QMainWindow):
         
         if signal['ext_number'] == 0:
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
+            for index in range(len(self.video_bg):
+                if index == signal['lane']:
+                    self.video_bg[index].setStyleSheet('background-color:green')
+                else:
+                    self.video_bg[index].setStyleSheet('background-color:red')
         elif signal['ext_number'] == 1:
-            self.timer.stop()
-            self.create_lcd_timer(self.start_time + signal['ext_time'], signal['lane'])
+            self.start_time += signal['ext_time']
         else:
-            self.timer.stop()
-            self.create_lcd_timer(self.start_time + signal['ext_time'], signal['lane'])
+            self.start_time += signal['ext_time']
     
+        
         #Write Log
     
     def video_player_config(self):
@@ -222,6 +226,11 @@ class MyApp(QMainWindow):
                               self.ui.video_layout1,
                               self.ui.video_layout2,
                               self.ui.video_layout3]
+        
+        self.video_bg = [self.ui.vid_bg0,
+                         self.ui.vid_bg1,
+                         self.ui.vid_bg2,
+                         self.ui.vid_bg3]
         
         #Add Player to Layouts
         for index in range(len(self.player)):
@@ -271,8 +280,9 @@ class MyApp(QMainWindow):
         try:
             self.backend.pre_run(self.data)
             
+            #Starts Backend Thread
             self.backend.start() 
-           #Starts Backend Thread
+            pass
            
     
         #Set Paths for Video Player
