@@ -233,6 +233,8 @@ class MyApp(QMainWindow):
                               self.ui.video_layout2,
                               self.ui.video_layout3]
         
+          
+        
         self.video_bg = [self.ui.vid_bg0,
                          self.ui.vid_bg1,
                          self.ui.vid_bg2,
@@ -241,7 +243,9 @@ class MyApp(QMainWindow):
         #Add Player to Layouts
         for index in range(len(self.player)):
             self.video_layouts[index].addWidget(self.player[index])
-            
+            self.player[index].load(Phonon.MediaSource('/'))
+            self.player[index].installEventFilter(self)
+
         #Full Screen Handlers
         self.ui.full_screen0.pressed.connect(lambda: self.show_full_screen_video(0))
         self.ui.full_screen1.pressed.connect(lambda: self.show_full_screen_video(1))
@@ -256,6 +260,15 @@ class MyApp(QMainWindow):
     
         #LCD Timer Configuration
         self.lcd_timers = [self.ui.lcd_timer0, self.ui.lcd_timer1, self.ui.lcd_timer2, self.ui.lcd_timer3]
+
+    def eventFilter(self, obj, event):
+        # =====================================================================
+        # Enables Double Click Full screen for video Player
+        # =====================================================================
+        if event.type() == QEvent.MouseButtonDblClick:
+            index = self.player.index(obj)
+            self.show_full_screen_video(index)    
+        return True
 
     def show_full_screen_video(self,index):
         # =====================================================================
@@ -272,6 +285,7 @@ class MyApp(QMainWindow):
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
    
+    
     def vid_select(self):
         # =====================================================================
         # Handler for Select Stream Action
@@ -279,8 +293,7 @@ class MyApp(QMainWindow):
         
         vid_select_dialog = SelectStream(parent = self)
         vid_select_dialog.exec()
-        
-  
+
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
@@ -289,8 +302,7 @@ class MyApp(QMainWindow):
             #Starts Backend Thread
             self.backend.start() 
             pass
-           
-    
+
         #Set Paths for Video Player
         finally:
             self.video_paths = self.data['paths']
@@ -304,8 +316,17 @@ class MyApp(QMainWindow):
             #Least Delayed Play
             for x in self.player:
                 x.play()
+            
+            
+    @classmethod   
+    def qimg2cv(self, q_img):
+        # =====================================================================
+        # Converts QImage to OpenCV Format (WILL BE USED IN THE FUTURE)
+        # =====================================================================
+        q_img.save('temp.png', 'png')
+        mat = cv2.imread('temp.png')
+        return mat
         
-       
                 
     def stream_video(self, q_id):
         # =====================================================================
@@ -331,11 +352,6 @@ class MyApp(QMainWindow):
         #Set Start time
         self.start_time = countdown
         
-        
-       
-        
-        
-
     def update_lcd_timer_value(self,index):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
