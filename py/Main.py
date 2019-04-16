@@ -39,7 +39,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
-from BackendAPI import Backend
+#from BackendAPI import Backend
 
 class ROI():
     
@@ -290,7 +290,7 @@ class MyApp(QMainWindow):
                          self.ui.vid_bg1,
                          self.ui.vid_bg2,
                          self.ui.vid_bg3]
-        
+
         #Add Player to Layouts
         for index in range(len(self.player)):
             self.video_layouts[index].addWidget(self.player[index])
@@ -315,10 +315,14 @@ class MyApp(QMainWindow):
         close_full_screenSC.setContext(Qt.ApplicationShortcut)
         close_full_screenSC.activated.connect(self.close_full_screen_video)
     
+        self.ui.snapshot0.clicked.connect(lambda : self.video_snapshot(0))
+        self.ui.snapshot1.clicked.connect(lambda : self.video_snapshot(1))
+        self.ui.snapshot2.clicked.connect(lambda : self.video_snapshot(2))
+        self.ui.snapshot3.clicked.connect(lambda : self.video_snapshot(3))
+    
         #LCD Timer Configuration
         self.lcd_timers = [self.ui.lcd_timer0, self.ui.lcd_timer1, self.ui.lcd_timer2, self.ui.lcd_timer3]
 
-    
     def eventFilter(self, obj, event):
         # =====================================================================
         # Enables Double Click Full screen for video Player
@@ -342,8 +346,18 @@ class MyApp(QMainWindow):
             vid_widget_x = x.videoWidget()
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
-   
-    
+
+    def video_snapshot(self, q_id):
+        # =====================================================================
+        # Takes Real time Image and Saves it
+        # =====================================================================
+        img = self.player[q_id].videoWidget().snapshot()
+        
+        location = os.environ['APPDIR'] + '/snapshots'
+        file_name = time.asctime() + 'QID' + str(q_id) +'.png'
+        file ='{}/{}'.format(location, file_name)
+        img.save(file, 'png')
+
     def vid_select(self):
         # =====================================================================
         # Handler for Select Stream Action

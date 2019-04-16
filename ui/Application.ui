@@ -107,9 +107,10 @@ color: rgb(255, 255, 255);</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:200; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Traffic Control - Graphical User Interface&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Application Logger&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;---------------------------------------------------------------------------------&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:15pt;&quot;&gt;Traffic Control - Graphical User Interface&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Application Logger&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:15pt;&quot;&gt;-----------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:15pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
@@ -367,6 +368,146 @@ p, li { white-space: pre-wrap; }
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="snapshot0">
+    <property name="geometry">
+     <rect>
+      <x>55</x>
+      <y>20</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Take Snapshot</string>
+    </property>
+    <property name="statusTip">
+     <string>Snapshot</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/snapshot.png</normaloff>:/icons/img/snapshot.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>25</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Alt+1</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="snapshot3">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>380</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Take Snapshot</string>
+    </property>
+    <property name="statusTip">
+     <string>Snapshot</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/snapshot.png</normaloff>:/icons/img/snapshot.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>25</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Alt+4</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="snapshot2">
+    <property name="geometry">
+     <rect>
+      <x>55</x>
+      <y>380</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Take Snapshot</string>
+    </property>
+    <property name="statusTip">
+     <string>Snapshot</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/snapshot.png</normaloff>:/icons/img/snapshot.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>25</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Alt+3</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="snapshot1">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>20</y>
+      <width>21</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Take Snapshot</string>
+    </property>
+    <property name="statusTip">
+     <string>Snapshot</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="AppResources.qrc">
+      <normaloff>:/icons/img/snapshot.png</normaloff>:/icons/img/snapshot.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>25</height>
+     </size>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Alt+2</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
    <zorder>vid_bg3</zorder>
    <zorder>vid_bg0</zorder>
    <zorder>vid_bg2</zorder>
@@ -387,6 +528,10 @@ p, li { white-space: pre-wrap; }
    <zorder>full_screen3</zorder>
    <zorder>full_screen2</zorder>
    <zorder>full_screen1</zorder>
+   <zorder>snapshot0</zorder>
+   <zorder>snapshot3</zorder>
+   <zorder>snapshot2</zorder>
+   <zorder>snapshot1</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
