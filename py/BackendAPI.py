@@ -9,6 +9,7 @@ from sel import crop
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+import random
 
 
 class Backend(QThread):
@@ -20,11 +21,24 @@ class Backend(QThread):
 
 
     def pre_run(self,dict_front):
-        self.pts = dict_front['points']
-        self.vidPath = dict_front['paths']
+
+        self.pts = [x for x in dict_front['points'] if x != None]
+        self.vidPath = [x for x in dict_front['paths'] if x != '']
         self.preset_time = dict_front['preset']
         self.width = dict_front['widths']
-
+   
+# =============================================================================
+# giving UMat cv2 error     
+# =============================================================================
+#        print(self.pts,self.vidPath,self.width)
+#        
+#        self.img = list()
+#        for i in range(len(self.pts)):
+#            self.img[i]=[crop(VideoSampler(self.vidPath[i],random.randint(1,8)),self.pts[i])]
+#       
+#        
+#        print(self.img)
+        
         self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
              crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
              crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
@@ -44,36 +58,36 @@ class Backend(QThread):
         # =====================================================================
 
         while True:
-            for i in range(1,5):
-                den1,den2,den3,den4 = scan(self.img,self.width)
+            for i in range(len(self.img)):
+                density = scan(self.img,self.width)
                 
                 #Initial Time Calculated for Lane i
-                init_time = initial(den1,den2,den3,den4,i,self.preset_time)
+                init_time = initial(density,i,self.preset_time)
                 
                 #Emits a Signal INIT
                 self.emit(SIGNAL('SBS'), 
-                          self.construct_signal(i-1, int(init_time)))
+                          self.construct_signal(i, int(init_time)))
                 
                 #Change to Logger in UI
                 #print('lane '+str(i)+' : '+str(int(init_time))+' secs')
                 
                 #Thread sleeps for init_time-7 seconds
-                if init_time > 8 :
-                    self.sleep((int(init_time)-10))
+            
+                self.sleep((int(init_time)-10))
                 
                 extn_count = 1
                 
                 
                 #Check This Line 
-                den1,den2,den3,den4 = scan(self.img,self.width)
+                density = scan(self.img,self.width)
                 
-                etimer = extension(den1,den2,den3,den4,i,extn_count, init_time, self.preset_time)
+                etimer = extension(density,i,extn_count, init_time, self.preset_time)
                 
                 #Emits a Signal EXT1
                 self.emit(SIGNAL('SBS'), 
-                          self.construct_signal(i-1, int(init_time), extn_count, int(etimer))) 
-                if etimer > 8 :
-                    self.sleep((int(etimer)-10))
+                          self.construct_signal(i, int(init_time), extn_count, int(etimer))) 
+               
+                self.sleep((int(etimer)-10))
                
                 #Change to Logger in UI
                 #print('lane '+str(i)+' extension time 1 : '+str(int(etimer))+' secs')
@@ -81,17 +95,17 @@ class Backend(QThread):
                 extn_count += 1
                 if etimer != 0 :
                     #Check This Line
-                    den1,den2,den3,den4 = scan(self.img, self.width)
+                    density = scan(self.img, self.width)
                     
-                    etimer= extension(den1,den2,den3,den4,i,extn_count, init_time, self.preset_time)
+                    etimer= extension(density,i,extn_count, init_time, self.preset_time)
                     
                     self.emit(SIGNAL('SBS'), 
-                          self.construct_signal(i-1, int(init_time), extn_count, int(etimer))) 
+                          self.construct_signal(i, int(init_time), extn_count, int(etimer))) 
                     
-                    if etimer > 8 :
-                        self.sleep((int(etimer)-10))
+                    self.sleep((int(etimer)-10))
                 else:
                     continue
+#                self.sleep(3)
             i=0
         return 0
                     
@@ -100,15 +114,14 @@ class Backend(QThread):
 
 
 def scan(img,width):
-    den=[0,0,0,0]
-    for i in range(4):
+    density=[0,0,0,0]
+    for i in range(len(img)):
         vehicle_count = detection(img[i])
         print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
-        den[i] = density_4(vehicle_count, width[i])
+        density[i] = density_4(vehicle_count, width[i])
+    #density of all lanes
     
-    
-    return den[0],den[1],den[2],den[3]
-
+    return density
 
             
             

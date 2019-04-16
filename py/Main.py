@@ -24,7 +24,7 @@ class ROI():
         
         #Video Sampler
         cap = cv2.VideoCapture(self.video)
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 120-1)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 1) #need the first frame
         res, self.frame = cap.read()
 
     def select_points(self):
