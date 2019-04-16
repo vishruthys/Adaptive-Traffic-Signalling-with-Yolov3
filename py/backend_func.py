@@ -1,10 +1,35 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Mar 23 04:13:56 2019
 
-@author: sujay
-"""
+# =============================================================================
+#       Description about this file here
+#       Developers : Venkat Sai Krishna, 
+#                   Vishruth Y S, 
+#                   Sujay Biradar
+# =============================================================================
+#       Copyright (C) 2019  *Developers* 
+# 
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+# 
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+# 
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# =============================================================================
+
+# =============================================================================
+#       Removing the above copyright notice from the code is a direct breach 
+#       of GNU's GPL v3.0 . If you have modified this code or developed 
+#       any feature, feel free to append your name to the copyright name list.
+#
+#       This code is part of the repo https://github.com/vishruthys/VidGUI
+# =============================================================================
 
 def density_5(c0,c1,c2,c3,c4,wi):
     wt=[1,0.5,4,5,0.75]#weight preset

@@ -1,6 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# =============================================================================
+#       Main Application Executable
+#       Developer : Shashank Sharma
+# =============================================================================
+#       Copyright (C) 2019  Shashank Sharma, 
+# 
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+# 
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+# 
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# =============================================================================
+
+# =============================================================================
+#       Removing the above copyright notice from the code is a direct breach 
+#       of GNU's GPL v3.0 . If you have modified this code or developed 
+#       any feature, feel free to append your name to the copyright name list.
+#
+#       This code is part of the repo https://github.com/vishruthys/VidGUI
+# =============================================================================
+
 from Application import Ui_MainWindow
 from VidSelect import Ui_Dialog
 from PyQt4.QtCore import *
@@ -11,7 +39,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
-
 from BackendAPI import Backend
 
 class ROI():
@@ -195,7 +222,7 @@ class MyApp(QMainWindow):
         self.showFullScreen()
         
         #Create a Backend Thread
-        self.backend = Backend()
+        self.backend = Backend(player = self.player)
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
@@ -328,24 +355,17 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            
             self.backend.pre_run(self.data)
             
             #Starts Backend Thread
             self.backend.start() 
-            
             pass
-
-        #Set Paths for Video Player
         except:
-            
             #If Cancel Button is Clicked
             pass
-            
         finally:
-            
             try:
-                
+                #Set Paths for Video Player
                 self.video_paths = self.data['paths']
                 
                 #Load Video
@@ -353,17 +373,15 @@ class MyApp(QMainWindow):
                 for index in range(len(self.video_paths)):
                     if self.video_paths[index]:
                         self.stream_video(index)
-                
-                
+
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-            
+
             except:
-               
                 # If cancel Button is clicked
                 pass
-            
+
     def stream_video(self, q_id):
         # =====================================================================
         # Stream Video of Quadrant identified by q_id
