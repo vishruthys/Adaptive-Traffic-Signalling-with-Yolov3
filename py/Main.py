@@ -290,11 +290,7 @@ class MyApp(QMainWindow):
                          self.ui.vid_bg1,
                          self.ui.vid_bg2,
                          self.ui.vid_bg3]
-        
-        
-        
-        
-        
+
         #Add Player to Layouts
         for index in range(len(self.player)):
             self.video_layouts[index].addWidget(self.player[index])
