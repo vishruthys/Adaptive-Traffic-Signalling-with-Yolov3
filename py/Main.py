@@ -10,7 +10,7 @@ import sys,time,os,shutil,logging
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-
+import UiEssentials as uie
 
 from BackendAPI import Backend
 
@@ -32,10 +32,12 @@ class ROI():
         # Select 4 Points in CW
         # =====================================================================
         fig, ax = plt.subplots(figsize = (20, 10))
+        fig.canvas.set_window_title('Region Selector')
         
         #Plots the Image on the Plot
         ax.imshow(cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB))
         
+        #Title of Image
         ax.set_title('Select Region of Interest')
         
         #Select 4 Points on the image
@@ -55,8 +57,7 @@ class SelectStream(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         
-        self.path_edit = [self.ui.videdit0, self.ui.videdit1, self.ui.videdit2, self.ui.videdit3]
-        self.width_edit = [self.ui.width0, self.ui.width1, self.ui.width2, self.ui.width3]
+        self.edit_box_config()
 
         #Configure Buttons
         self.upload_button_config()
@@ -68,7 +69,28 @@ class SelectStream(QDialog):
         
         #Temporary ROI
         self.roi_point_list = [None, None, None, None]
-        
+    
+    def edit_box_config(self):
+        # =====================================================================
+        # Configure Text Boxes and Spin Box
+        # =====================================================================
+        self.path_edit = [self.ui.videdit0, self.ui.videdit1, self.ui.videdit2, self.ui.videdit3]
+        self.width_edit = [self.ui.width0, self.ui.width1, self.ui.width2, self.ui.width3]
+
+        #Crop Activates when there is an active video file
+        self.path_edit[0].textChanged.connect(lambda: self.paths_changed(0))
+        self.path_edit[1].textChanged.connect(lambda: self.paths_changed(1))
+        self.path_edit[2].textChanged.connect(lambda: self.paths_changed(2))
+        self.path_edit[3].textChanged.connect(lambda: self.paths_changed(3))
+    
+    def paths_changed(self, q_id):
+        # =====================================================================
+        # Runs whenever path is a valid video path
+        # =====================================================================
+        path = self.path_edit[q_id].text()
+        if uie.isVideoFile(path):
+            self.crop_buttons[q_id].click()
+    
     def upload_button_config(self):
         # =====================================================================
         # Configure Upload Buttons
@@ -80,6 +102,9 @@ class SelectStream(QDialog):
         self.ui.vid3.pressed.connect(lambda: self.file_select(3))
     
     def crop_button_config(self):
+        # =====================================================================
+        # Configure Crop Buttons
+        # =====================================================================
         self.crop_buttons = [self.ui.crop0, self.ui.crop1, self.ui.crop2, self.ui.crop3]
         
         self.ui.crop0.pressed.connect(lambda : self.select_roi(0))
@@ -88,9 +113,13 @@ class SelectStream(QDialog):
         self.ui.crop3.pressed.connect(lambda : self.select_roi(3))
     
     def select_roi(self,index):
+        # =====================================================================
+        # Selecting Region of Interest
+        # =====================================================================
         video_file = self.path_edit[index].text()
         
-        if video_file:
+        #Also checks if the file is a valid video file
+        if video_file and uie.isVideoFile(video_file):
             roi_selector = ROI(video_file)
             self.roi_point_list[index] = roi_selector.select_points()
             
@@ -112,9 +141,8 @@ class SelectStream(QDialog):
             video_paths.append(self.path_edit[q_id].text())
             width.append(self.width_edit[q_id].value())
 
-        
         #Entering Preset
-        preset, yes = QInputDialog.getInt(self,'Enter Preset','Preset : ', 150, 0, 999)
+        preset, yes = QInputDialog.getInt(self,'Enter Preset','Preset (in sec): ', 150, 0, 999)
         
         #If Clicked Ok
         packed_data = dict()
@@ -124,7 +152,6 @@ class SelectStream(QDialog):
             packed_data['paths'] = video_paths
             packed_data['widths'] = width
 
-            
             self.parent.data = packed_data
 
             #Close Dialog Box
@@ -135,9 +162,9 @@ class SelectStream(QDialog):
         # Select File When Upload Button is clicked
         # =====================================================================
         path = QFileDialog.getOpenFileName(self)
-        if path :
+        if path and uie.isVideoFile(path):
             self.path_edit[q_id].setText(path)
-            self.crop_buttons[q_id].click()
+            
         
 class MyApp(QMainWindow):
     
@@ -178,6 +205,7 @@ class MyApp(QMainWindow):
         #Create a Timer
         self.timer = QTimer()
         self.timer.start(1000)
+        
         #For every second update LCD
         self.timer.timeout.connect(lambda: self.update_lcd_timer_value(self.traffic_index))
         
@@ -210,8 +238,6 @@ class MyApp(QMainWindow):
         else:
             self.start_time += signal['ext_time']
     
-        
-        #Write Log
     
     def video_player_config(self):
         # =====================================================================
@@ -232,8 +258,6 @@ class MyApp(QMainWindow):
                               self.ui.video_layout1,
                               self.ui.video_layout2,
                               self.ui.video_layout3]
-        
-          
         
         self.video_bg = [self.ui.vid_bg0,
                          self.ui.vid_bg1,
@@ -293,41 +317,46 @@ class MyApp(QMainWindow):
         
         vid_select_dialog = SelectStream(parent = self)
         vid_select_dialog.exec()
-
+        
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
+            
             self.backend.pre_run(self.data)
             
             #Starts Backend Thread
             self.backend.start() 
+            
             pass
 
         #Set Paths for Video Player
+        except:
+            
+            #If Cancel Button is Clicked
+            pass
+            
         finally:
-            self.video_paths = self.data['paths']
             
-            #Load Video
-            self.show_status('Loading...', 1500)
-            for index in range(len(self.video_paths)):
-                if self.video_paths[index]:
-                    self.stream_video(index)
-            
-            #Least Delayed Play
-            for x in self.player:
-                x.play()
-            
-            
-    @classmethod   
-    def qimg2cv(self, q_img):
-        # =====================================================================
-        # Converts QImage to OpenCV Format (WILL BE USED IN THE FUTURE)
-        # =====================================================================
-        q_img.save('temp.png', 'png')
-        mat = cv2.imread('temp.png')
-        return mat
-        
+            try:
                 
+                self.video_paths = self.data['paths']
+                
+                #Load Video
+                self.show_status('Loading...', 1500)
+                for index in range(len(self.video_paths)):
+                    if self.video_paths[index]:
+                        self.stream_video(index)
+                
+                
+                #Least Delayed Play
+                for x in self.player:
+                    x.play()
+            
+            except:
+               
+                # If cancel Button is clicked
+                pass
+            
     def stream_video(self, q_id):
         # =====================================================================
         # Stream Video of Quadrant identified by q_id
