@@ -6,7 +6,7 @@ Created on Sat Mar 23 04:13:56 2019
 @author: sujay
 """
 
-def density_5(c0,c1,c2,c3,c4,wi):
+def density_5(c0,c1,c2,c3,c4,wi): #to include auto
     wt=[1,0.5,4,5,0.75]#weight preset
     den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3]+c4*wt[4])/wi
     return den
@@ -17,12 +17,12 @@ def density_4(vehicle_count, width):
     density = (vehicle_count[0]*wt[0]+
            vehicle_count[1]*wt[1]+
            vehicle_count[2]*wt[2]+
-           vehicle_count[3]*wt[3])/width
+           vehicle_count[3]*wt[3])/(width+0.0001)
     
     return density
 
 def initial(d0,d1,d2,d3,l,preset_time):
-    total_den=d0+d1+d2+d3
+    total_den=d0+d1+d2+d3+0.00001
 #    print("total density ",total_den)
     if (l==1):
         it=d0/total_den
@@ -33,10 +33,13 @@ def initial(d0,d1,d2,d3,l,preset_time):
     else:
         it=d3/total_den
 #    print("init density ",it)
-    return it*(0.75*preset_time)
+    tt=it*(0.75*preset_time)
+    if(tt<15):
+        tt=15
+    return tt
 
 def extension(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration 
-    total_den=d0+d1+d2+d3
+    total_den=d0+d1+d2+d3+0.00001
     
     if (l==1):
         it=d0
@@ -51,6 +54,38 @@ def extension(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration
     print()
     print("ex ratio",ex)
     print()
+
+    if (ex>=0.9 and extn_count==1):
+        ex=0.075*preset_time*ex
+        if(ex<=10):
+            ext=10
+        elif (ex>0.5*prev_time):
+            ext=0.5*prev_time
+        else:
+            ext=ex
+        return ext
+    elif(ex<0.9 and extn_count==1):
+        ext=0
+        return ext
+    elif(ex>=1.8 and extn_count==2):
+        ex=0.0375*preset_time*ex
+        if(ex<=10):
+            ext=10
+        elif (ex>0.25*prev_time):
+            ext=0.25*prev_time
+        else:
+            ext=ex
+        return ext
+    else:
+        ext=0
+        return ext
+        
+    
+   
+
+	
+	
+"""
     if(ex>=0.9):
         if(extn_count==1):
             ex=0.075*preset_time*ex
@@ -71,6 +106,5 @@ def extension(d0,d1,d2,d3,l,extn_count,prev_time,preset_time):#iteration
         return ext
     else:
         return 0
-   
-
+"""
         
