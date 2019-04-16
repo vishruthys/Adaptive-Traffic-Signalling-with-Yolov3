@@ -15,6 +15,7 @@ This is a readme file to inspect the recent updates released by [Shashank Sharma
 9. Opens Crop window as soon as the app detects a valid video file in textbox
 10. Added shortcuts for full screen (Ctrl+1, Ctrl+2 ...)
 11. Performance optimization in backend
+12. All the devt will be carried on forked repo
 
 ## April 13 2019
 

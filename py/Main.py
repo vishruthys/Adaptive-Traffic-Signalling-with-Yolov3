@@ -270,6 +270,12 @@ class MyApp(QMainWindow):
             self.player[index].load(Phonon.MediaSource('/'))
             self.player[index].installEventFilter(self)
 
+        #Plays Video in Infinite Repeat Mode
+        self.player[0].mediaObject().aboutToFinish.connect(lambda: self.player[0].seek(0))
+        self.player[1].mediaObject().aboutToFinish.connect(lambda: self.player[1].seek(0))
+        self.player[2].mediaObject().aboutToFinish.connect(lambda: self.player[2].seek(0))
+        self.player[3].mediaObject().aboutToFinish.connect(lambda: self.player[3].seek(0))
+        
         #Full Screen Handlers
         self.ui.full_screen0.pressed.connect(lambda: self.show_full_screen_video(0))
         self.ui.full_screen1.pressed.connect(lambda: self.show_full_screen_video(1))
@@ -285,6 +291,7 @@ class MyApp(QMainWindow):
         #LCD Timer Configuration
         self.lcd_timers = [self.ui.lcd_timer0, self.ui.lcd_timer1, self.ui.lcd_timer2, self.ui.lcd_timer3]
 
+    
     def eventFilter(self, obj, event):
         # =====================================================================
         # Enables Double Click Full screen for video Player
