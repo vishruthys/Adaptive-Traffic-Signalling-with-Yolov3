@@ -34,7 +34,7 @@
 # =============================================================================
 
 from BackendFunction import density_4, initial, extension
-from fr import detection
+from Detector import detection
 from Selector import VideoSampler
 from Selector import crop
 import random
