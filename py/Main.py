@@ -39,7 +39,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
-#from BackendAPI import Backend
+from BackendAPI import Backend
 
 class ROI():
     
@@ -226,17 +226,10 @@ class MyApp(QMainWindow):
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
-        
-        self.traffic_index = -1
-        
+
         #Create a Timer
         self.timer = QTimer()
-        self.timer.start(1000)
-        
-        #For every second update LCD
-        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(self.traffic_index))
-        
-    
+
     def SBS_frontend_update(self, signal):
         # =====================================================================
         # Updates Frontend Whenever tje signal SBS is emitted
@@ -253,8 +246,9 @@ class MyApp(QMainWindow):
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
-            self.traffic_index = signal['lane']
+            self.timer.stop()
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
+
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
@@ -392,6 +386,9 @@ class MyApp(QMainWindow):
                 for x in self.player:
                     x.play()
 
+
+                
+                
             except:
                 # If cancel Button is clicked
                 pass
@@ -411,8 +408,8 @@ class MyApp(QMainWindow):
         # =====================================================================
         
         #Same Timer for Index and Index+1 (Traffic Color Change)
-        self.lcd_timers[index].display(countdown)
-        self.lcd_timers[(index+1)%4].display(countdown)
+        #self.lcd_timers[index].display(countdown)
+        #self.lcd_timers[(index+1)%4].display(countdown)
         
         self.lcd_timers[(index+2)%4].display(0)
         self.lcd_timers[(index+3)%4].display(0)
@@ -420,18 +417,25 @@ class MyApp(QMainWindow):
         #Set Start time
         self.start_time = countdown
         
+        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(index))
+        self.timer.start(1000)
+        
+        self.ui_update()
+        
+        
     def update_lcd_timer_value(self,index):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
-        if index != -1:
-            self.start_time -= 1
-            if self.start_time >= 0 :
-                self.lcd_timers[index].display(self.start_time)
-                self.lcd_timers[(index+1)%4].display(self.start_time)
-     
-            if self.start_time == 0:
-                self.timer.stop()
+        
+        self.start_time -= 1
+        if self.start_time >= 0 and self.start_time<=10:
+            self.lcd_timers[index].display(self.start_time)
+            self.lcd_timers[(index+1)%4].display(self.start_time)
+ 
+        if self.start_time == 0:
+            self.lcd_timers[index].display(0)
+            self.lcd_timers[(index+1)%4].display(0)
             
         
     def log(self, msg):
