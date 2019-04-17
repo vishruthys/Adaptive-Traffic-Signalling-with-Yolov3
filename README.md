@@ -13,7 +13,7 @@ GUI Developer : [Shashank Sharma](https://github.com/shashankrnr32)
 ## Description
 **Core Project** : Yet to be documented
 
-**GUI** : Designed on Qt4 Framework and implemented using PyQt4.
+**GUI** : Designed on Qt4 Framework and implemented using PyQt4 by @shashankrnr32
 
 ## Installation and Run
 1. Provide Executable permission for `run.sh`
