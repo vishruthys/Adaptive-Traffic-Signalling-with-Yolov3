@@ -45,4 +45,4 @@ def crop(img,pts):
     points=points.astype(int)
     cv2.fillPoly(mask, [points], (255,255,255))
     cropImg = cv2.bitwise_and(img, mask)
-    return cropImg
+    return cv2.UMat(cropImg)

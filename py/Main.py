@@ -204,10 +204,10 @@ class MyApp(QMainWindow):
         
         #Create a Timer
         self.timer = QTimer()
-        self.timer.start(1000)
+        
         
         #For every second update LCD
-        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(self.traffic_index))
+        
         
     
     def SBS_frontend_update(self, signal):
@@ -226,8 +226,11 @@ class MyApp(QMainWindow):
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
-            self.traffic_index = signal['lane']
+#            self.traffic_index = signal['lane']
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
+            self.timer.start(1000)
+            self.timer.timeout.connect(lambda: self.update_lcd_timer_value(signal['lane']))
+            
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
@@ -398,8 +401,8 @@ class MyApp(QMainWindow):
                 self.lcd_timers[index].display(self.start_time)
                 self.lcd_timers[(index+1)%4].display(self.start_time)
      
-            if self.start_time == 0:
-                self.timer.stop()
+#            if self.start_time == 0:
+#                self.timer.stop()
             
         
     def log(self, msg):

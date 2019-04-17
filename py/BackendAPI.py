@@ -30,19 +30,21 @@ class Backend(QThread):
 # =============================================================================
 # giving UMat cv2 error     
 # =============================================================================
-#        print(self.pts,self.vidPath,self.width)
-#        
-#        self.img = list()
-#        for i in range(len(self.pts)):
-#            self.img[i]=[crop(VideoSampler(self.vidPath[i],random.randint(1,8)),self.pts[i])]
-#       
-#        
-#        print(self.img)
+        print(self.pts,self.vidPath,self.width)
         
-        self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
-             crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
-             crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
-             crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
+        self.img = list()
+        for i in range(len(self.vidPath)):
+            self.img.append(crop(VideoSampler(self.vidPath[i],random.randint(1,8)),self.pts[i]))
+#            self.img.append(VideoSampler(self.vidPath[i],random.randint(1,8)))
+
+#        self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
+#                  crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
+#                  crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
+#                  crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
+        print('crop',type(crop(VideoSampler(self.vidPath[0],4),self.pts[0])))
+        print('img',type(self.img[0]))
+        
+
 
     def construct_signal(self, lane, lane_time, ext_number = 0, ext_time = 0):
         signal = {'lane': lane, 
