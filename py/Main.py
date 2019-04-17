@@ -1,6 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# =============================================================================
+#       Main Application Executable
+#       Developer : Shashank Sharma
+# =============================================================================
+#       Copyright (C) 2019  Shashank Sharma, 
+# 
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+# 
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+# 
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# =============================================================================
+
+# =============================================================================
+#       Removing the above copyright notice from the code is a direct breach 
+#       of GNU's GPL v3.0 . If you have modified this code or developed 
+#       any feature, feel free to append your name to the copyright name list.
+#
+#       This code is part of the repo https://github.com/vishruthys/VidGUI
+# =============================================================================
+
 from Application import Ui_MainWindow
 from VidSelect import Ui_Dialog
 from PyQt4.QtCore import *
@@ -11,7 +39,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
-
 from BackendAPI import Backend
 
 class ROI():
@@ -195,21 +222,23 @@ class MyApp(QMainWindow):
         self.showFullScreen()
         
         #Create a Backend Thread
-        self.backend = Backend()
+        self.backend = Backend(player = self.player)
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
-        
-        self.traffic_index = -1
-        
+
         #Create a Timer
         self.timer = QTimer()
+<<<<<<< HEAD
         
         
         #For every second update LCD
         
         
     
+=======
+
+>>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
     def SBS_frontend_update(self, signal):
         # =====================================================================
         # Updates Frontend Whenever tje signal SBS is emitted
@@ -226,11 +255,17 @@ class MyApp(QMainWindow):
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
+<<<<<<< HEAD
 #            self.traffic_index = signal['lane']
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
             self.timer.start(1000)
             self.timer.timeout.connect(lambda: self.update_lcd_timer_value(signal['lane']))
             
+=======
+            self.timer.stop()
+            self.create_lcd_timer(signal['lane_time'], signal['lane'])
+
+>>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
@@ -266,7 +301,7 @@ class MyApp(QMainWindow):
                          self.ui.vid_bg1,
                          self.ui.vid_bg2,
                          self.ui.vid_bg3]
-        
+
         #Add Player to Layouts
         for index in range(len(self.player)):
             self.video_layouts[index].addWidget(self.player[index])
@@ -291,10 +326,14 @@ class MyApp(QMainWindow):
         close_full_screenSC.setContext(Qt.ApplicationShortcut)
         close_full_screenSC.activated.connect(self.close_full_screen_video)
     
+        self.ui.snapshot0.clicked.connect(lambda : self.video_snapshot(0))
+        self.ui.snapshot1.clicked.connect(lambda : self.video_snapshot(1))
+        self.ui.snapshot2.clicked.connect(lambda : self.video_snapshot(2))
+        self.ui.snapshot3.clicked.connect(lambda : self.video_snapshot(3))
+    
         #LCD Timer Configuration
         self.lcd_timers = [self.ui.lcd_timer0, self.ui.lcd_timer1, self.ui.lcd_timer2, self.ui.lcd_timer3]
 
-    
     def eventFilter(self, obj, event):
         # =====================================================================
         # Enables Double Click Full screen for video Player
@@ -318,8 +357,18 @@ class MyApp(QMainWindow):
             vid_widget_x = x.videoWidget()
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
-   
-    
+
+    def video_snapshot(self, q_id):
+        # =====================================================================
+        # Takes Real time Image and Saves it
+        # =====================================================================
+        img = self.player[q_id].videoWidget().snapshot()
+        
+        location = os.environ['APPDIR'] + '/snapshots'
+        file_name = time.asctime() + 'QID' + str(q_id) +'.png'
+        file ='{}/{}'.format(location, file_name)
+        img.save(file, 'png')
+
     def vid_select(self):
         # =====================================================================
         # Handler for Select Stream Action
@@ -331,24 +380,17 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            
             self.backend.pre_run(self.data)
             
             #Starts Backend Thread
             self.backend.start() 
-            
             pass
-
-        #Set Paths for Video Player
         except:
-            
             #If Cancel Button is Clicked
             pass
-            
         finally:
-            
             try:
-                
+                #Set Paths for Video Player
                 self.video_paths = self.data['paths']
                 
                 #Load Video
@@ -356,17 +398,18 @@ class MyApp(QMainWindow):
                 for index in range(len(self.video_paths)):
                     if self.video_paths[index]:
                         self.stream_video(index)
-                
-                
+
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-            
+
+
+                
+                
             except:
-               
                 # If cancel Button is clicked
                 pass
-            
+
     def stream_video(self, q_id):
         # =====================================================================
         # Stream Video of Quadrant identified by q_id
@@ -382,8 +425,8 @@ class MyApp(QMainWindow):
         # =====================================================================
         
         #Same Timer for Index and Index+1 (Traffic Color Change)
-        self.lcd_timers[index].display(countdown)
-        self.lcd_timers[(index+1)%4].display(countdown)
+        #self.lcd_timers[index].display(countdown)
+        #self.lcd_timers[(index+1)%4].display(countdown)
         
         self.lcd_timers[(index+2)%4].display(0)
         self.lcd_timers[(index+3)%4].display(0)
@@ -391,10 +434,17 @@ class MyApp(QMainWindow):
         #Set Start time
         self.start_time = countdown
         
+        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(index))
+        self.timer.start(1000)
+        
+        self.ui_update()
+        
+        
     def update_lcd_timer_value(self,index):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
+<<<<<<< HEAD
         if index != -1:
             self.start_time -= 1
             if self.start_time >= 0 :
@@ -403,6 +453,17 @@ class MyApp(QMainWindow):
      
 #            if self.start_time == 0:
 #                self.timer.stop()
+=======
+        
+        self.start_time -= 1
+        if self.start_time >= 0 and self.start_time<=10:
+            self.lcd_timers[index].display(self.start_time)
+            self.lcd_timers[(index+1)%4].display(self.start_time)
+ 
+        if self.start_time == 0:
+            self.lcd_timers[index].display(0)
+            self.lcd_timers[(index+1)%4].display(0)
+>>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
             
         
     def log(self, msg):

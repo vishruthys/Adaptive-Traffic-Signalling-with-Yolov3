@@ -1,5 +1,33 @@
-# Essential Python Funtions to Run UI
-# Developer : Shashank Sharma
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# =============================================================================
+#       Essentials Methods for FrontEnd and Backend
+#       Developer : Shashank Sharma
+# =============================================================================
+#       Copyright (C) 2019  Shashank Sharma, 
+# 
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+# 
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+# 
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# =============================================================================
+
+# =============================================================================
+#       Removing the above copyright notice from the code is a direct breach 
+#       of GNU's GPL v3.0 . If you have modified this code or developed 
+#       any feature, feel free to append your name to the copyright name list.
+#
+#       This code is part of the repo https://github.com/vishruthys/VidGUI
+# =============================================================================
 
 import cv2
 
@@ -20,4 +48,3 @@ def isVideoFile(file_path):
     # =========================================================================
     return '.' + file_path.split('.')[-1] in supported_video_formats
         
-

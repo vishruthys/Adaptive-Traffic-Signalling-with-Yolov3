@@ -1,3 +1,37 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# =============================================================================
+#       Description about this file here
+#       Developers : Venkat Sai Krishna,
+#                   Vishruth Y S, 
+#                   Sujay Biradar
+# =============================================================================
+#       Copyright (C) 2019  *Developers* 
+# 
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+# 
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+# 
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# =============================================================================
+
+# =============================================================================
+#       Removing the above copyright notice from the code is a direct breach 
+#       of GNU's GPL v3.0 . If you have modified this code or developed 
+#       any feature, feel free to append your name to the copyright name list.
+#
+#       This code is part of the repo https://github.com/vishruthys/VidGUI
+# =============================================================================
+
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,7 +58,6 @@ def Selector(a):
 def VideoSampler(video,time):
    cap = cv2.VideoCapture(video)
    fps=cap.get(cv2.CAP_PROP_FPS)	
-   #total_frames = cap.get(7)
    cap.set(1, (time*fps))
    ret, frame = cap.read()
    return frame
@@ -39,7 +72,6 @@ def VideoSampler(video,time):
     return final'''
 
 def crop(img,pts):
-    #newimg = cv2.imread("./t18.png")
     mask = np.ones(img.shape, dtype = "uint8")
     points=np.asarray(pts)
     points=points.astype(int)
