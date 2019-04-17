@@ -226,9 +226,7 @@ class MyApp(QMainWindow):
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
-
-        #Create a Timer
-        self.timer = QTimer()
+        self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
 
     def SBS_frontend_update(self, signal):
         # =====================================================================
@@ -246,18 +244,13 @@ class MyApp(QMainWindow):
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
-            self.timer.stop()
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
-
+            
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
                 else:
                     self.video_bg[index].setStyleSheet('background-color:red')
-        elif signal['ext_number'] == 1:
-            self.start_time += signal['ext_time']
-        else:
-            self.start_time += signal['ext_time']
     
     
     def video_player_config(self):
@@ -386,9 +379,6 @@ class MyApp(QMainWindow):
                 for x in self.player:
                     x.play()
 
-
-                
-                
             except:
                 # If cancel Button is clicked
                 pass
@@ -408,39 +398,37 @@ class MyApp(QMainWindow):
         # =====================================================================
         
         #Same Timer for Index and Index+1 (Traffic Color Change)
-        #self.lcd_timers[index].display(countdown)
-        #self.lcd_timers[(index+1)%4].display(countdown)
+        self.lcd_timers[index].display(0)
+        self.lcd_timers[(index+1)%4].display(0)
         
         self.lcd_timers[(index+2)%4].display(0)
         self.lcd_timers[(index+3)%4].display(0)
         
-        #Set Start time
-        self.start_time = countdown
-        
-        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(index))
-        self.timer.start(1000)
-        
-        self.ui_update()
-        
-        
-    def update_lcd_timer_value(self,index):
+        self.traffic_index = index
+
+    def update_lcd_timer_value(self,value):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
         
-        self.start_time -= 1
-        if self.start_time >= 0 and self.start_time<=10:
-            self.lcd_timers[index].display(self.start_time)
-            self.lcd_timers[(index+1)%4].display(self.start_time)
+        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
+        self.log(log_msg)
+        
+        #Display on LED only if value is less than 10
+        if value >= 0 and value<=10:
+            self.lcd_timers[self.traffic_index].display(value)
+            self.lcd_timers[(self.traffic_index+1)%4].display(value)
  
-        if self.start_time == 0:
-            self.lcd_timers[index].display(0)
-            self.lcd_timers[(index+1)%4].display(0)
-            
+        if value == 0:
+            self.lcd_timers[self.traffic_index].display(0)
+            self.lcd_timers[(self.traffic_index+1)%4].display(0)
+        
+        self.ui_update()
         
     def log(self, msg):
         # =====================================================================
         # Log on the application Terminal
+        # =====================================================================
         self.ui.terminal.append('>> {}'.format(msg))
         self.terminal_scrollbar.setValue(self.terminal_scrollbar.maximum())
     
