@@ -35,26 +35,29 @@
 
 from BackendFunctions import density_4, initial, extension
 from Detector import detection
-from Selector import VideoSampler
 from Selector import crop
-import random
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from UiEssentials import qimg2cv
+import cv2
 
 
 class Backend(QThread):
-   
-    def __init__(self,player, parent = None):
+
+    def __init__(self, parent = None):
         
         #Call Inherited Constructor
         super(Backend,self).__init__(parent)
         
         #Video Player for snapshot
-        self.video_player = player
+        self.connect(parent, SIGNAL('snap'), self.store_img)
         
         #New and Better Implemetation of Timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_lcd_frontend)
+        
+        #Flag to check whether frame is retrieved
+        self.retrieved_frame = False
 
     def pre_run(self,dict_front):
         # =====================================================================
@@ -66,9 +69,7 @@ class Backend(QThread):
         self.width = dict_front['widths']
 
         self.img = list()
-        for i in range(len(self.pts)):
-            self.img.append(crop(VideoSampler(self.vidPath[i],random.randint(1,8)),self.pts[i]))
-
+        
         # =====================================================================
         #self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
         #         crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
@@ -81,8 +82,8 @@ class Backend(QThread):
         # Sends signal to frontend every second to update LED Counter
         # =====================================================================
         self.start_time -= 1
-        
-        self.emit(SIGNAL('lcd'), self.start_time)
+        if self.start_time >= 0:
+            self.emit(SIGNAL('lcd'), self.start_time)
     
     def construct_signal(self, lane, lane_time, ext_number = 0, ext_time = 0):
         # =====================================================================
@@ -95,23 +96,37 @@ class Backend(QThread):
         
         return signal
 
-    def get_current_frame(self):
-        # =====================================================================
-        # Returns an array of 4 QImage
-        # =====================================================================
-        imgs = list()
-        for player in self.video_player:
-            imgs.append(player.videoWidget().snapshot())
-        return imgs
-
+    def store_img(self, signal):
+        self.img = signal
+        
+        self.retrieved_frame = True
+        
+    def crop_current_frame(self, current_frame):
+        for i in range(len(current_frame)):
+            current_frame[i] = crop(current_frame[i], self.pts[i])
+        return current_frame
+    
     def run(self):
         # =====================================================================
         # Called when the thread is started
         # =====================================================================
 
         while True:
-            for i in range(len(self.img)):
-                density = scan(self.img,self.width)
+            for i in range(len(self.pts)):
+                
+                #Send a retrieve signal
+                self.emit(SIGNAL('frameget'),True)
+                
+                while not self.retrieved_frame:
+                    pass
+                
+                #Stop the Retrieve signal
+                self.retrieved_frame = False
+                self.emit(SIGNAL('frameget'),False)
+                
+                current_frame = self.crop_current_frame(self.img)
+                
+                density = scan(current_frame,self.width)
                 
                 #Initial Time Calculated for Lane i
                 init_time = initial(density,i,self.preset_time)
@@ -125,13 +140,23 @@ class Backend(QThread):
                 self.emit(SIGNAL('SBS'), 
                           self.construct_signal(i, int(init_time)))
                 
+                
                 #Thread sleeps until the timer reaches 13
-                while self.start_time != 14:
+                self.sleep(init_time - 15)
+                self.emit(SIGNAL('frameget'),True)
+                while not self.start_time != 14:
                     pass
                 
                 extn_count = 1
                 
-                density = scan(self.img,self.width)
+                while not self.retrieved_frame:
+                    pass
+                
+                self.retrieved_frame = False
+                self.emit(SIGNAL('frameget'),False)
+                
+                current_frame = self.crop_current_frame(self.img)
+                density = scan(current_frame,self.width)
                 
                 etimer = extension(density,i,extn_count, init_time, self.preset_time)
                 
@@ -144,13 +169,22 @@ class Backend(QThread):
                 
                 #Thread sleep until the timer reached 13
                 if self.start_time > 14:
-                	while self.start_time != 14:
-                		pass
+                    self.sleep(self.start_time -15)
+                    while self.start_time != 14:
+                        pass
                 
+                self.emit(SIGNAL('frameget'),True)
                 extn_count += 1
                 
                 if etimer != 0 :
-                    density = scan(self.img, self.width)
+                    
+                    while not self.retrieved_frame:
+                        pass
+                    self.retrieved_frame = False
+                    self.emit(SIGNAL('frameget'),False)
+                    
+                    current_frame = self.crop_current_frame(self.img)
+                    density = scan(current_frame, self.width)
                     
                     etimer= extension(density, i, extn_count, init_time, self.preset_time)
                     
@@ -162,9 +196,10 @@ class Backend(QThread):
                           self.construct_signal(i, int(init_time), extn_count, int(etimer))) 
 
                 #End Timer
+                self.emit(SIGNAL('frameget'),False)
                 while self.start_time != 3:
                 	pass
-            
+                
             i=0
         return 0
 

@@ -2,6 +2,10 @@
 
 This is a readme file to inspect the recent updates released by [Shashank Sharma](https://github.com/shashankrnr32)
 
+## April 18 2019
+1. Now app gets current frame and does backend jobs.
+2. Application Tested once all around the cycle
+
 ## April 17 2019
 1. New and Better implementation of timers
 2. All expected tests complete.

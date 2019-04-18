@@ -40,7 +40,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
 from BackendAPI import Backend
-
+import gc
 class ROI():
     
     def __init__(self, video_file):
@@ -218,12 +218,12 @@ class MyApp(QMainWindow):
         self.right_menu_bar_config()
 
         #Create a Backend Thread
-        self.backend = Backend(player = self.player)
+        self.backend = Backend(parent = self)
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
-        
+        self.connect(self.backend, SIGNAL('frameget'), self.toggle_timer)
         #Stores Previous Heights
         resolution = uie.getScreenResolution()
         
@@ -236,7 +236,10 @@ class MyApp(QMainWindow):
         uie.setScreenResolution(self.geometry().width(), self.geometry().height())
         
         self.showFullScreen()
-
+        
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.get_current_frame)
+        
     def SBS_frontend_update(self, signal):
         # =====================================================================
         # Updates Frontend Whenever tje signal SBS is emitted
@@ -261,6 +264,24 @@ class MyApp(QMainWindow):
                 else:
                     self.video_bg[index].setStyleSheet('background-color:red')
     
+    
+    def get_current_frame(self):
+        # =====================================================================
+        # Returns an array of 4 QImage
+        # =====================================================================
+        imgs = list()
+        for i in range(len(self.player)):
+            q_img = self.player[i].videoWidget().snapshot()
+            cv2_img = uie.qimg2cv(q_img)
+            imgs.append(cv2_img)
+        
+        self.emit(SIGNAL('snap'), imgs)
+        
+    def toggle_timer(self, signal):
+        if signal:
+            self.timer.start(1000)
+        else:
+            self.timer.stop()
     
     def video_player_config(self):
         # =====================================================================
@@ -366,11 +387,8 @@ class MyApp(QMainWindow):
        
         try:
             self.backend.pre_run(self.data)
-            
-            #Starts Backend Thread
-            self.backend.start() 
-            pass
-        except:
+        except Exception as e:
+            print(e)
             #If Cancel Button is Clicked
             pass
         finally:
@@ -387,8 +405,10 @@ class MyApp(QMainWindow):
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-
-            except:
+                self.backend.start() 
+                
+            except Exception as e:
+                print(e)
                 # If cancel Button is clicked
                 pass
 
