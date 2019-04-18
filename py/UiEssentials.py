@@ -30,6 +30,8 @@
 # =============================================================================
 
 import cv2
+import subprocess
+import os
 
 def qimg2cv(q_img):
     # =====================================================================
@@ -48,3 +50,9 @@ def isVideoFile(file_path):
     # =========================================================================
     return '.' + file_path.split('.')[-1] in supported_video_formats
         
+def getScreenResolution():
+    output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
+    return output
+
+def setScreenResolution(width, height):
+    os.system('xrandr -s {}x{}'.format(width, height))

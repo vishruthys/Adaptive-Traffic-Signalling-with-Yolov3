@@ -216,17 +216,26 @@ class MyApp(QMainWindow):
         
         #Configure Close and Minimize Buttons
         self.right_menu_bar_config()
-        
-        #Full Screen (This should be at last of constructor)
-        #Because UI needs to buildup without full screen flag turned on
-        self.showFullScreen()
-        
+
         #Create a Backend Thread
         self.backend = Backend(player = self.player)
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
+        
+        #Stores Previous Heights
+        resolution = uie.getScreenResolution()
+        
+        resolution = str(resolution,'UTF-8').strip()
+        self.screen_resolution = [int(x) for x in resolution.split('x')]   
+        #Full Screen (This should be at last of constructor)
+        #Because UI needs to buildup without full screen flag turned on
+        
+        print('Changing Screen Resolution')
+        uie.setScreenResolution(self.geometry().width(), self.geometry().height())
+        
+        self.showFullScreen()
 
     def SBS_frontend_update(self, signal):
         # =====================================================================
@@ -487,6 +496,9 @@ class MyApp(QMainWindow):
         #Should stop all videos before exit (Else Segmentation Fault)
         for video_player in self.player:
             video_player.stop()
+        
+        uie.setScreenResolution(self.screen_resolution[0],self.screen_resolution[1])
+
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
