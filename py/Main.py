@@ -440,8 +440,10 @@ class MyApp(QMainWindow):
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
         
-        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
-        self.log(log_msg)
+        self.ui.lane_number.display(self.traffic_index)
+        self.ui.timer_value.display(value)
+        #log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
+        #self.log(log_msg)
         
         #Display on LED only if value is less than 10
         if value >= 0 and value<=10:
