@@ -1,4 +1,4 @@
-# VID Gui
+# Adaptive Traffic Signalling with YOLOv3
 Beta : Under Development
 
 ## Developers
@@ -29,4 +29,11 @@ All expected features of the GUI application with one cycle testing using 4 Samp
 
 ## License
 GNU GPL v3.0
+
+## Credits
+
+1. [Joseph Redmon](https://github.com/pjreddie) for his open source project [darknet](https://github.com/pjreddie/darknet)
+2. [Alexey](https://github.com/AlexeyAB) for the contribution to [darknet](https://github.com/AlexeyAB/darknet)
+
+Refer to the licenses in the project links above.
 
