@@ -31,7 +31,6 @@
 #       This code is part of the repo https://github.com/vishruthys/VidGUI
 # =============================================================================
 
-
 def density_5(c0,c1,c2,c3,c4,wi): #to include auto
     wt=[1,0.5,4,5,0.75]#weight preset
     den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3]+c4*wt[4])/wi
@@ -89,7 +88,6 @@ def extension(density,l,extn_count,prev_time,preset_time):#iteration
             ext=10
         elif (ex>0.5*prev_time):
             ext=0.5*prev_time
-
         else:
             ext=ex
         return ext
@@ -109,5 +107,4 @@ def extension(density,l,extn_count,prev_time,preset_time):#iteration
     else:
         ext=0
         return ext
-        
     

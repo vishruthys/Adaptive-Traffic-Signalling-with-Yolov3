@@ -32,19 +32,12 @@
 # =============================================================================
 
 
-
-#from sel import VideoSampler
-#from sel import Selector
 import cv2
-#import matplotlib.pyplot as plt
 import numpy as np
-
 
 def getOutputsNames(net):
     layersNames = net.getLayerNames()
     return [layersNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-
-
 
 # Load names classes
 options = {"config": "./yolov3.cfg",
@@ -70,7 +63,6 @@ def detection(image):
     net.setInput(blob)
     
     outs = net.forward(getOutputsNames(net))
-    
 
     car=0
     bike=0
@@ -108,6 +100,5 @@ def detection(image):
                 if class_id==7:
                     
                     truck=truck+1
-    
-    
+
     return car,bike,bus,truck

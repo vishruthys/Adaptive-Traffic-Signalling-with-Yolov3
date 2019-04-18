@@ -3,10 +3,11 @@
 
 # =============================================================================
 #       Backend Thread Starting Point
-#       Developers : Venkat Sai Krishna,
+#       Developers : Shashank Sharma
+#                   Venkat Sai Krishna,
 #                   Vishruth Y S, 
 #                   Sujay Biradar, 
-#                   Shashank Sharma
+#                   
 # =============================================================================
 #       Copyright (C) 2019  *Developers* 
 # 
@@ -32,51 +33,58 @@
 #       This code is part of the repo https://github.com/vishruthys/VidGUI
 # =============================================================================
 
-from backend_func import density_4, initial, extension
-from fr import detection
-import time  
-from sel import VideoSampler
-from sel import crop
-
+from BackendFunctions import density_4, initial, extension
+from Detector import detection
+from Selector import VideoSampler
+from Selector import crop
+import random
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import random
+
 
 
 class Backend(QThread):
    
-    def __init__(self,parent = None):
+    def __init__(self,player, parent = None):
         
         #Call Inherited Constructor
         super(Backend,self).__init__(parent)
+        
+        #Video Player for snapshot
         self.video_player = player
+        
+        #New and Better Implemetation of Timer
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_lcd_frontend)
 
     def pre_run(self,dict_front):
-
+        # =====================================================================
+        # Runs once before backend thread starts
+        # =====================================================================
         self.pts = [x for x in dict_front['points'] if x != None]
         self.vidPath = [x for x in dict_front['paths'] if x != '']
         self.preset_time = dict_front['preset']
         self.width = dict_front['widths']
-   
-        # =============================================================================
-        # giving UMat cv2 error     
-        # =============================================================================
-        print(self.pts,self.vidPath,self.width)
+
         self.img = list()
         for i in range(len(self.pts)):
-            self.img.append(crop(VideoSampler(self.vidPath[i],random.randint(1,8)),self.pts[i]))
-        print(self.img)
+            self.img.append(crop(VideoSampler(self.vidPath[i],1),self.pts[i]))
 
-
-
-# =============================================================================
-# 
-#         self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
-#              crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
-#              crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
-#              crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
-# 
-# =============================================================================
+        # =====================================================================
+        #self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
+        #         crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
+        #         crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
+        #         crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
+        # =====================================================================
+    
+    def update_lcd_frontend(self):
+        # =====================================================================
+        # Sends signal to frontend every second to update LED Counter
+        # =====================================================================
+        self.start_time -= 1
+        
+        self.emit(SIGNAL('lcd'), self.start_time)
+    
     def construct_signal(self, lane, lane_time, ext_number = 0, ext_time = 0):
         # =====================================================================
         # Constructs a signal to integrate with UI
@@ -94,7 +102,9 @@ class Backend(QThread):
         # =====================================================================
         imgs = list()
         for player in self.video_player:
-            imgs.append(player.videoWidget().snapshot())
+            i=0
+            imgs.append(crop(player.videoWidget().snapshot(),self.pts[i]))
+            i += 1
         return imgs
 
     def run(self):
@@ -103,62 +113,78 @@ class Backend(QThread):
         # =====================================================================
 
         while True:
-            for i in range(len(self.img)):
-                density = scan(self.img,self.width)
+            current_frame = self.get_current_frame()
+            
+            for i in range(len(current_frame)):
+                density = scan(current_frame,self.width)
                 
                 #Initial Time Calculated for Lane i
                 init_time = initial(density,i,self.preset_time)
                 
-                #Emits a Signal INIT
+                #Stops old timer, Sets new timer timer, starts timer
+                self.timer.stop()
+                self.start_time = int(init_time)
+                self.timer.start(1000)
+                
+                #Signal Emit
                 self.emit(SIGNAL('SBS'), 
                           self.construct_signal(i, int(init_time)))
-
-                self.sleep((int(init_time)-10))
+                
+                #Thread sleeps until the timer reaches 13
+                while self.start_time != 14:
+                    pass
                 
                 extn_count = 1
                 
-                #Check This Line 
-                density = scan(self.img,self.width)
+                density = scan(current_frame,self.width)
                 
                 etimer = extension(density,i,extn_count, init_time, self.preset_time)
                 
-                #Emits a Signal EXT1
+                #Adds Extension to existing timer
+                self.start_time += int(etimer)
+                
+                #Signal Emit 
                 self.emit(SIGNAL('SBS'), 
                           self.construct_signal(i, int(init_time), extn_count, int(etimer))) 
-
-               
-                self.sleep((int(etimer)-10))
-
+                
+                #Thread sleep until the timer reached 13
+                if self.start_time > 14:
+                	while self.start_time != 14:
+                		pass
                 
                 extn_count += 1
                 
                 if etimer != 0 :
-                    #Check This Line
-                    density = scan(self.img, self.width)
+                    density = scan(current_frame, self.width)
                     
-                    etimer= extension(density,i,extn_count, init_time, self.preset_time)
+                    etimer= extension(density, i, extn_count, init_time, self.preset_time)
                     
+                    #Adds Extension2 to Existing timer
+                    self.start_time += int(etimer)
+                    
+                    #Signal Emit
                     self.emit(SIGNAL('SBS'), 
                           self.construct_signal(i, int(init_time), extn_count, int(etimer))) 
 
-                else:
-                    continue
+                #End Timer
+                while self.start_time != 3:
+                	pass
+
             i=0
         return 0
 
 
 def scan(img,width):
+    # =========================================================================
+    # Scans Number of Vehciles
+    # =========================================================================
     density=[0,0,0,0]
     for i in range(len(img)):
         vehicle_count = detection(img[i])
+        
         print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
+        
+        #density of all lanes
         density[i] = density_4(vehicle_count, width[i])
-    #density of all lanes
-    
-    return density
 
-            
-            
-        
-        
-        
+    return density

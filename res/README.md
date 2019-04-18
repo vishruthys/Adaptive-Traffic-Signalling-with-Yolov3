@@ -2,6 +2,10 @@
 
 This is a readme file to inspect the recent updates released by [Shashank Sharma](https://github.com/shashankrnr32)
 
+## April 17 2019
+1. New and Better implementation of timers
+2. All expected tests complete.
+
 ## April 16 2019
 
 1. LCD Timers

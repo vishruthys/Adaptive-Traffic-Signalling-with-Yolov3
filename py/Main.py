@@ -51,7 +51,7 @@ class ROI():
         
         #Video Sampler
         cap = cv2.VideoCapture(self.video)
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 1) #need the first frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 120-1)
         res, self.frame = cap.read()
 
     def select_points(self):
@@ -226,19 +226,8 @@ class MyApp(QMainWindow):
         
         #Connect Backend Thread to UI via signal SBS
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
+        self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
 
-        #Create a Timer
-        self.timer = QTimer()
-<<<<<<< HEAD
-        
-        
-        #For every second update LCD
-        
-        
-    
-=======
-
->>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
     def SBS_frontend_update(self, signal):
         # =====================================================================
         # Updates Frontend Whenever tje signal SBS is emitted
@@ -255,26 +244,13 @@ class MyApp(QMainWindow):
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
-<<<<<<< HEAD
-#            self.traffic_index = signal['lane']
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
-            self.timer.start(1000)
-            self.timer.timeout.connect(lambda: self.update_lcd_timer_value(signal['lane']))
             
-=======
-            self.timer.stop()
-            self.create_lcd_timer(signal['lane_time'], signal['lane'])
-
->>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
                 else:
                     self.video_bg[index].setStyleSheet('background-color:red')
-        elif signal['ext_number'] == 1:
-            self.start_time += signal['ext_time']
-        else:
-            self.start_time += signal['ext_time']
     
     
     def video_player_config(self):
@@ -403,9 +379,6 @@ class MyApp(QMainWindow):
                 for x in self.player:
                     x.play()
 
-
-                
-                
             except:
                 # If cancel Button is clicked
                 pass
@@ -425,50 +398,37 @@ class MyApp(QMainWindow):
         # =====================================================================
         
         #Same Timer for Index and Index+1 (Traffic Color Change)
-        #self.lcd_timers[index].display(countdown)
-        #self.lcd_timers[(index+1)%4].display(countdown)
+        self.lcd_timers[index].display(0)
+        self.lcd_timers[(index+1)%4].display(0)
         
         self.lcd_timers[(index+2)%4].display(0)
         self.lcd_timers[(index+3)%4].display(0)
         
-        #Set Start time
-        self.start_time = countdown
-        
-        self.timer.timeout.connect(lambda: self.update_lcd_timer_value(index))
-        self.timer.start(1000)
-        
-        self.ui_update()
-        
-        
-    def update_lcd_timer_value(self,index):
+        self.traffic_index = index
+
+    def update_lcd_timer_value(self,value):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
-<<<<<<< HEAD
-        if index != -1:
-            self.start_time -= 1
-            if self.start_time >= 0 :
-                self.lcd_timers[index].display(self.start_time)
-                self.lcd_timers[(index+1)%4].display(self.start_time)
-     
-#            if self.start_time == 0:
-#                self.timer.stop()
-=======
         
-        self.start_time -= 1
-        if self.start_time >= 0 and self.start_time<=10:
-            self.lcd_timers[index].display(self.start_time)
-            self.lcd_timers[(index+1)%4].display(self.start_time)
+        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
+        self.log(log_msg)
+        
+        #Display on LED only if value is less than 10
+        if value >= 0 and value<=10:
+            self.lcd_timers[self.traffic_index].display(value)
+            self.lcd_timers[(self.traffic_index+1)%4].display(value)
  
-        if self.start_time == 0:
-            self.lcd_timers[index].display(0)
-            self.lcd_timers[(index+1)%4].display(0)
->>>>>>> d631abb54306c4b623a26cab44a942eff68c18d7
-            
+        if value == 0:
+            self.lcd_timers[self.traffic_index].display(0)
+            self.lcd_timers[(self.traffic_index+1)%4].display(0)
+        
+        self.ui_update()
         
     def log(self, msg):
         # =====================================================================
         # Log on the application Terminal
+        # =====================================================================
         self.ui.terminal.append('>> {}'.format(msg))
         self.terminal_scrollbar.setValue(self.terminal_scrollbar.maximum())
     
@@ -532,7 +492,7 @@ if __name__ == "__main__":
     App = QApplication(sys.argv)
     myapp = MyApp()
     myapp.show()
-    
+        
     shutil.rmtree('./__pycache__',ignore_errors=True)
     sys.exit(App.exec_())
         
