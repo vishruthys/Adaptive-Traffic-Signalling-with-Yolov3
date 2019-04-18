@@ -33,7 +33,7 @@
 #       This code is part of the repo https://github.com/vishruthys/VidGUI
 # =============================================================================
 
-from BackendFunction import density_4, initial, extension
+from BackendFunctions import density_4, initial, extension
 from Detector import detection
 from Selector import VideoSampler
 from Selector import crop
