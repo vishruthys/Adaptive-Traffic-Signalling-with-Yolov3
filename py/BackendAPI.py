@@ -41,7 +41,6 @@ from PyQt4.QtGui import *
 from UiEssentials import qimg2cv
 import cv2
 
-
 class Backend(QThread):
 
     def __init__(self, parent = None):
