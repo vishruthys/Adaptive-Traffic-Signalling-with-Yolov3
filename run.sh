@@ -1,9 +1,15 @@
 export APPDIR=$(pwd)
 
 echo Building User Interface
-pyuic4 ui/Application.ui -o py/Application.py
+
 pyuic4 ui/VidSelect.ui -o py/VidSelect.py
 pyrcc4 ui/AppResources.qrc  -o py/AppResources_rc.py -py3
+if [ "$1" == "1080" ]
+then
+pyuic4 ui/Application1080.ui -o py/Application.py
+else
+pyuic4 ui/Application720.ui -o py/Application.py
+fi
 
 echo Starting Application..
 cd py/
