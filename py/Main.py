@@ -375,7 +375,7 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            #self.backend.pre_run(self.data)
+            self.backend.pre_run(self.data)
             pass
         except Exception as e:
             print(e)
@@ -395,7 +395,7 @@ class MyApp(QMainWindow):
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-                #self.backend.start() 
+                self.backend.start() 
                 
             except Exception as e:
                 print(e)
