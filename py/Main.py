@@ -264,7 +264,9 @@ class MyApp(QMainWindow):
         imgs = list()
         
         #Get current frame for all video players
-        for i in range(len(self.player)):
+        self.video_paths = [x for x in self.video_paths if x != '']
+        
+        for i in range(len(self.video_paths)):
             q_img = self.player[i].videoWidget().snapshot()
             cv2_img = uie.qimg2cv(q_img)
             imgs.append(cv2_img)
