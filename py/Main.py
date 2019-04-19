@@ -36,7 +36,6 @@ from PyQt4.QtGui import *
 from PyQt4.phonon import Phonon
 import sys,time,os,shutil,logging
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
 from BackendAPI import Backend
@@ -241,7 +240,7 @@ class MyApp(QMainWindow):
                  Extenstion Number : {}
                  Extension Time : {}
                  '''.format(
-                 signal['lane'],
+                 signal['lane'] + 1,
                  signal['lane_time'],
                  signal['ext_number'],
                  signal['ext_time']))
@@ -376,7 +375,7 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            self.backend.pre_run(self.data)
+            #self.backend.pre_run(self.data)
             pass
         except Exception as e:
             print(e)
@@ -396,7 +395,7 @@ class MyApp(QMainWindow):
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-                self.backend.start() 
+                #self.backend.start() 
                 
             except Exception as e:
                 print(e)
@@ -425,16 +424,17 @@ class MyApp(QMainWindow):
         self.lcd_timers[(index+3)%4].display(0)
         
         self.traffic_index = index
+        self.ui.lane_number.display(self.traffic_index + 1)
 
     def update_lcd_timer_value(self,value):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
-        
-        self.ui.lane_number.display(self.traffic_index)
+
         self.ui.timer_value.display(value)
-        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
-        self.show_status(log_msg,)
+        
+        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index+1, value)
+        self.show_status(log_msg,0)
         
         #Display on LED only if value is less than 10
         if value >= 0 and value<=10:
