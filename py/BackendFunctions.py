@@ -28,17 +28,23 @@
 #       of GNU's GPL v3.0 . If you have modified this code or developed 
 #       any feature, feel free to append your name to the copyright name list.
 #
-#       This code is part of the repo https://github.com/vishruthys/VidGUI
+#       This code is part of the repo owned by https://github.com/vishruthys/
 # =============================================================================
 
-def density_5(c0,c1,c2,c3,c4,wi): #to include auto
-    wt=[1,0.5,4,5,0.75]#weight preset
+#to include auto
+def density_5(c0,c1,c2,c3,c4,wi): 
+    #weight preset
+    wt=[1,0.5,4,5,0.75]
     den=(c0*wt[0]+c1*wt[1]+c2*wt[2]+c3*wt[3]+c4*wt[4])/wi
     return den
 
 def density_4(vehicle_count, width):
-    wt = [1,0.5,4,5]#weight preset
-
+    #weight preset
+    wt = [1,0.5,4,5]
+    
+    #Alternate expression for density
+    #density = (sum([vehicle_count[i] * wt[i] for i in range(len(width))]))/(width)
+    
     density = (vehicle_count[0]*wt[0]+
                vehicle_count[1]*wt[1]+
                vehicle_count[2]*wt[2]+
@@ -46,25 +52,24 @@ def density_4(vehicle_count, width):
     
     return density
 
-def initial(density,l,preset_time):
+def initial(density, l, preset_time):
     total_density = 0
+    
     for i in range(len(density)):
         total_density += density[i]
-#    print("total density ",total_den)
+    
     for i in range(len(density)):
-        if(l==i):
+        if(l == i):
             it = density[i]/total_density
             break
-        else:
-            continue
         
-    tt=it*(0.75*preset_time)
-    if(tt<15):
-        tt=15
-        
+    tt = it * (0.75 * preset_time)
+    if tt < 15:
+        tt = 15
+   
     return tt
 
-def extension(density,l,extn_count,prev_time,preset_time):#iteration 
+def extension(density,l,extn_count,prev_time,preset_time):
     total_density = 0
     for i in range(len(density)):
         total_density += density[i]
@@ -76,35 +81,33 @@ def extension(density,l,extn_count,prev_time,preset_time):#iteration
         else:
             continue
     
-    ex=(3*it)/(total_density-it)
-    
-    print()
-    print("ex ratio",ex)
-    print()
+    ex=(3 * it)/(total_density - it)
 
-    if (ex>=0.9 and extn_count==1):
-        ex=0.075*preset_time*ex
-        if(ex<=10):
-            ext=10
-        elif (ex>0.5*prev_time):
-            ext=0.5*prev_time
+    print("\nex ratio {} \n".format(ex))
+
+    if ex >= 0.9 and extn_count == 1:
+        ex = 0.075 * preset_time * ex
+        if ex <= 10:
+            ext = 10
+        elif ex > 0.5 * prev_time:
+            ext = 0.5 * prev_time
         else:
-            ext=ex
+            ext = ex
         return ext
     
-    elif(ex<0.9 and extn_count==1):
-        ext=0
-        return ext
-    elif(ex>=1.8 and extn_count==2):
-        ex=0.0375*preset_time*ex
-        if(ex<=10):
-            ext=10
-        elif (ex>0.25*prev_time):
-            ext=0.25*prev_time
+    elif ex < 0.9 and extn_count == 1:
+        return 0
+    
+    elif(ex >= 1.8 and extn_count == 2):
+        ex = 0.0375 * preset_time * ex
+        if ex <= 10:
+            ext = 10
+        elif ex>0.25 * prev_time:
+            ext = 0.25 * prev_time
         else:
-            ext=ex
+            ext = ex
         return ext
+    
     else:
-        ext=0
-        return ext
+        return 0
     

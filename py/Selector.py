@@ -28,21 +28,14 @@
 #       of GNU's GPL v3.0 . If you have modified this code or developed 
 #       any feature, feel free to append your name to the copyright name list.
 #
-#       This code is part of the repo https://github.com/vishruthys/VidGUI
+#       This code is part of the repo owned by https://github.com/vishruthys/
 # =============================================================================
 
 
 import cv2
 import numpy as np
 
-def VideoSampler(video,time):
-    cap = cv2.VideoCapture(video)
-    fps=cap.get(cv2.CAP_PROP_FPS)	
-    cap.set(1, (time*fps))
-    ret, frame = cap.read()
-    return frame
-
-def crop(img,pts):
+def crop(img, pts):
     mask = np.ones(img.shape, dtype = "uint8")
     points=np.asarray(pts)
     points=points.astype(int)
@@ -52,6 +45,15 @@ def crop(img,pts):
 
 '''
 Unused Functions in this Project
+
+def VideoSampler(video,time):
+    cap = cv2.VideoCapture(video)
+    fps=cap.get(cv2.CAP_PROP_FPS)	
+    cap.set(1, (time*fps))
+    ret, frame = cap.read()
+    return frame
+
+
 def cord(newimg):
     fig, ax = plt.subplots(figsize=(20, 10))
     ax.imshow(cv2.cvtColor(newimg, cv2.COLOR_BGR2RGB))

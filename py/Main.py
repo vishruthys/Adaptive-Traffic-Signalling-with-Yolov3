@@ -26,7 +26,7 @@
 #       of GNU's GPL v3.0 . If you have modified this code or developed 
 #       any feature, feel free to append your name to the copyright name list.
 #
-#       This code is part of the repo https://github.com/vishruthys/VidGUI
+#       This code is part of the repo owned by https://github.com/vishruthys/
 # =============================================================================
 
 from Application import Ui_MainWindow
@@ -538,6 +538,10 @@ if __name__ == "__main__":
     myapp = MyApp()
     myapp.show()
     
-    shutil.rmtree('./__pycache__',ignore_errors=True)
-    sys.exit(App.exec_())
-        
+    try:
+        os.remove('temp.png')
+    finally:
+        shutil.rmtree('./__pycache__',ignore_errors=True)
+    
+    #Program exits with the same exit code as application
+    sys.exit(App.exec_())      
