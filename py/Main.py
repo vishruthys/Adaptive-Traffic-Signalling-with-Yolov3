@@ -36,11 +36,9 @@ from PyQt4.QtGui import *
 from PyQt4.phonon import Phonon
 import sys,time,os,shutil,logging
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
 import UiEssentials as uie
 from BackendAPI import Backend
-import gc
 class ROI():
     
     def __init__(self, video_file):
@@ -224,22 +222,14 @@ class MyApp(QMainWindow):
         self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
         self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
         self.connect(self.backend, SIGNAL('frameget'), self.toggle_timer)
-        #Stores Previous Heights
-        resolution = uie.getScreenResolution()
-        
-        resolution = str(resolution,'UTF-8').strip()
-        self.screen_resolution = [int(x) for x in resolution.split('x')]   
-        #Full Screen (This should be at last of constructor)
-        #Because UI needs to buildup without full screen flag turned on
-        
-        print('Changing Screen Resolution')
-        uie.setScreenResolution(self.geometry().width(), self.geometry().height())
-        
-        self.showFullScreen()
-        
+       
+        # A timer when started, retrieves the current frame every second
         self.timer = QTimer()
         self.timer.timeout.connect(self.get_current_frame)
         
+        #This stmt must be at last of the constructor
+        self.showFullScreen()
+
     def SBS_frontend_update(self, signal):
         # =====================================================================
         # Updates Frontend Whenever tje signal SBS is emitted
@@ -250,14 +240,16 @@ class MyApp(QMainWindow):
                  Extenstion Number : {}
                  Extension Time : {}
                  '''.format(
-                 signal['lane'],
+                 signal['lane'] + 1,
                  signal['lane_time'],
                  signal['ext_number'],
                  signal['ext_time']))
         
         if signal['ext_number'] == 0:
+            #Configure LCD timer
             self.create_lcd_timer(signal['lane_time'], signal['lane'])
             
+            #Color Change Logic
             for index in range(len(self.video_bg)):
                 if index == signal['lane']:
                     self.video_bg[index].setStyleSheet('background-color:green')
@@ -270,17 +262,25 @@ class MyApp(QMainWindow):
         # Returns an array of 4 QImage
         # =====================================================================
         imgs = list()
+        
+        #Get current frame for all video players
         for i in range(len(self.player)):
             q_img = self.player[i].videoWidget().snapshot()
             cv2_img = uie.qimg2cv(q_img)
             imgs.append(cv2_img)
         
+        #Emit the list of images to the thread
         self.emit(SIGNAL('snap'), imgs)
         
     def toggle_timer(self, signal):
+        # =====================================================================
+        # Flag Function to retrieve current frame
+        # =====================================================================
         if signal:
+            #To start Retrieving
             self.timer.start(1000)
         else:
+            #To stop Retrieving
             self.timer.stop()
     
     def video_player_config(self):
@@ -364,17 +364,6 @@ class MyApp(QMainWindow):
             if vid_widget_x.isFullScreen():
                 vid_widget_x.exitFullScreen()
 
-    def video_snapshot(self, q_id):
-        # =====================================================================
-        # Takes Real time Image and Saves it
-        # =====================================================================
-        img = self.player[q_id].videoWidget().snapshot()
-        
-        location = os.environ['APPDIR'] + '/snapshots'
-        file_name = time.asctime() + 'QID' + str(q_id) +'.png'
-        file ='{}/{}'.format(location, file_name)
-        img.save(file, 'png')
-
     def vid_select(self):
         # =====================================================================
         # Handler for Select Stream Action
@@ -387,6 +376,7 @@ class MyApp(QMainWindow):
        
         try:
             self.backend.pre_run(self.data)
+            pass
         except Exception as e:
             print(e)
             #If Cancel Button is Clicked
@@ -434,16 +424,17 @@ class MyApp(QMainWindow):
         self.lcd_timers[(index+3)%4].display(0)
         
         self.traffic_index = index
+        self.ui.lane_number.display(self.traffic_index + 1)
 
     def update_lcd_timer_value(self,value):
         # =====================================================================
         # Called Every second when timer is running : Updates LCD
         # =====================================================================
-        
-        self.ui.lane_number.display(self.traffic_index)
+
         self.ui.timer_value.display(value)
-        #log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index, value)
-        #self.log(log_msg)
+        
+        log_msg = 'Lane {} ---> Timer {}'.format(self.traffic_index+1, value)
+        self.show_status(log_msg,0)
         
         #Display on LED only if value is less than 10
         if value >= 0 and value<=10:
@@ -481,7 +472,28 @@ class MyApp(QMainWindow):
         self.ui.actionSelect_Stream.triggered.connect(self.vid_select)
         self.ui.actionMinimize.triggered.connect(lambda : self.showMinimized())
         self.ui.actionExit.triggered.connect(lambda : self.close())
+        self.ui.actionSave_Log.triggered.connect(lambda: self.save_log())
+    
+    def save_log(self):
+        content = self.ui.terminal.toPlainText()
+        if content:
+            file_location = QFileDialog.getSaveFileName(parent = self, caption = 'Save Log', directory = 'log.txt')
+            if file_location:
+                with open(file_location, 'w') as file:
+                    file.write(content)
+        else:
+            self.show_status('Nothing to Save')
+    def video_snapshot(self, q_id):
+        # =====================================================================
+        # Takes Real time Image and Saves it
+        # =====================================================================
+        img = self.player[q_id].videoWidget().snapshot()
         
+        location = os.environ['APPDIR'] + '/snapshots'
+        file_name = time.asctime() + 'QID' + str(q_id) +'.png'
+        file ='{}/{}'.format(location, file_name)
+        img.save(file, 'png')
+    
     def shortcut_config(self):
         #Pressing F5 will clear the Application Terminal
         clear_logSC = QShortcut(self)
@@ -518,9 +530,6 @@ class MyApp(QMainWindow):
         #Should stop all videos before exit (Else Segmentation Fault)
         for video_player in self.player:
             video_player.stop()
-        
-        uie.setScreenResolution(self.screen_resolution[0],self.screen_resolution[1])
-
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
