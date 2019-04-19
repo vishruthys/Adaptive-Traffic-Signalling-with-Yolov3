@@ -658,6 +658,8 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionSelect_Stream"/>
     <addaction name="separator"/>
+    <addaction name="actionSave_Log"/>
+    <addaction name="separator"/>
     <addaction name="actionMinimize"/>
     <addaction name="actionExit"/>
    </widget>
@@ -683,6 +685,14 @@ p, li { white-space: pre-wrap; }
   <action name="actionMinimize">
    <property name="text">
     <string>Minimize</string>
+   </property>
+  </action>
+  <action name="actionSave_Log">
+   <property name="text">
+    <string>Save Log</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
