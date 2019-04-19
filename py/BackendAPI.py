@@ -30,7 +30,7 @@
 #       of GNU's GPL v3.0 . If you have modified this code or developed 
 #       any feature, feel free to append your name to the copyright name list.
 #
-#       This code is part of the repo https://github.com/vishruthys/VidGUI
+#       This code is part of the repo owned by https://github.com/vishruthys/
 # =============================================================================
 
 from BackendFunctions import density_4, initial, extension
@@ -68,13 +68,6 @@ class Backend(QThread):
         self.width = dict_front['widths']
 
         self.img = list()
-        
-        # =====================================================================
-        #self.img=[crop(VideoSampler(self.vidPath[0],4),self.pts[0]),
-        #         crop(VideoSampler(self.vidPath[1],1),self.pts[1]),
-        #         crop(VideoSampler(self.vidPath[2],6),self.pts[2]),
-        #         crop(VideoSampler(self.vidPath[3],8),self.pts[3])]
-        # =====================================================================
     
     def update_lcd_frontend(self):
         # =====================================================================
@@ -205,7 +198,7 @@ class Backend(QThread):
 
 def scan(img,width):
     # =========================================================================
-    # Scans Number of Vehciles
+    # Scans Number of Vehciles and returns density
     # =========================================================================
     density=[0,0,0,0]
     for i in range(len(img)):

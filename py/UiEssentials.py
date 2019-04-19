@@ -26,12 +26,10 @@
 #       of GNU's GPL v3.0 . If you have modified this code or developed 
 #       any feature, feel free to append your name to the copyright name list.
 #
-#       This code is part of the repo https://github.com/vishruthys/VidGUI
+#       This code is part of the repo owned by https://github.com/vishruthys/
 # =============================================================================
 
 import cv2
-import subprocess
-import os
 
 def qimg2cv(q_img):
     # =====================================================================
@@ -49,10 +47,3 @@ def isVideoFile(file_path):
     # Returns if the selected file is a video file or not
     # =========================================================================
     return '.' + file_path.split('.')[-1] in supported_video_formats
-        
-def getScreenResolution():
-    output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
-    return output
-
-def setScreenResolution(width, height):
-    os.system('xrandr -s {}x{}'.format(width, height))
