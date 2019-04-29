@@ -503,6 +503,15 @@ class MyApp(QMainWindow):
         clear_logSC.setContext(Qt.ApplicationShortcut)
         clear_logSC.activated.connect(lambda : self.ui.terminal.clear())
         
+        snap_SC = QShortcut(self)
+        snap_SC.setKey(QKeySequence('Ctrl+P'))
+        snap_SC.setContext(Qt.ApplicationShortcut)
+        snap_SC.activated.connect(lambda : (self.ui.snapshot0.click(),
+                                            self.ui.snapshot1.click(),
+                                            self.ui.snapshot2.click(),
+                                            self.ui.snapshot3.click()))
+        
+        
     def right_menu_bar_config(self):
         # =====================================================================
         # Configure Quit and Minimize Buttons
@@ -538,10 +547,7 @@ if __name__ == "__main__":
     myapp = MyApp()
     myapp.show()
     
-    try:
-        os.remove('temp.png')
-    finally:
-        shutil.rmtree('./__pycache__',ignore_errors=True)
+    shutil.rmtree('./__pycache__',ignore_errors=True)
     
     #Program exits with the same exit code as application
     sys.exit(App.exec_())      
