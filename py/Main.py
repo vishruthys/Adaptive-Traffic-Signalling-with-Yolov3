@@ -38,7 +38,7 @@ import sys,time,os,shutil,logging
 import cv2
 import matplotlib.pyplot as plt
 import UiEssentials as uie
-from BackendAPI import Backend
+#from BackendAPI import Backend
 class ROI():
     
     def __init__(self, video_file):
@@ -216,12 +216,12 @@ class MyApp(QMainWindow):
         self.right_menu_bar_config()
 
         #Create a Backend Thread
-        self.backend = Backend(parent = self)
+        #self.backend = Backend(parent = self)
         
         #Connect Backend Thread to UI via signal SBS
-        self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
-        self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
-        self.connect(self.backend, SIGNAL('frameget'), self.toggle_timer)
+        #self.connect(self.backend, SIGNAL('SBS'), self.SBS_frontend_update)
+        #self.connect(self.backend, SIGNAL('lcd'), self.update_lcd_timer_value)
+        #self.connect(self.backend, SIGNAL('frameget'), self.toggle_timer)
        
         # A timer when started, retrieves the current frame every second
         self.timer = QTimer()
@@ -377,7 +377,7 @@ class MyApp(QMainWindow):
         #Written in Try-Except Block to handle Cancel Button Click
        
         try:
-            self.backend.pre_run(self.data)
+            #self.backend.pre_run(self.data)
             pass
         except Exception as e:
             print(e)
@@ -397,7 +397,7 @@ class MyApp(QMainWindow):
                 #Least Delayed Play
                 for x in self.player:
                     x.play()
-                self.backend.start() 
+                #self.backend.start() 
                 
             except Exception as e:
                 print(e)
@@ -475,6 +475,11 @@ class MyApp(QMainWindow):
         self.ui.actionMinimize.triggered.connect(lambda : self.showMinimized())
         self.ui.actionExit.triggered.connect(lambda : self.close())
         self.ui.actionSave_Log.triggered.connect(lambda: self.save_log())
+        
+        self.ui.actionSave_Snapshot.triggered.connect(lambda : (self.ui.snapshot0.click(),
+                                            self.ui.snapshot1.click(),
+                                            self.ui.snapshot2.click(),
+                                            self.ui.snapshot3.click()))
     
     def save_log(self):
         content = self.ui.terminal.toPlainText()
@@ -502,14 +507,6 @@ class MyApp(QMainWindow):
         clear_logSC.setKey(QKeySequence('F5'))
         clear_logSC.setContext(Qt.ApplicationShortcut)
         clear_logSC.activated.connect(lambda : self.ui.terminal.clear())
-        
-        snap_SC = QShortcut(self)
-        snap_SC.setKey(QKeySequence('Ctrl+P'))
-        snap_SC.setContext(Qt.ApplicationShortcut)
-        snap_SC.activated.connect(lambda : (self.ui.snapshot0.click(),
-                                            self.ui.snapshot1.click(),
-                                            self.ui.snapshot2.click(),
-                                            self.ui.snapshot3.click()))
         
         
     def right_menu_bar_config(self):
