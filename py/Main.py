@@ -538,10 +538,10 @@ if __name__ == "__main__":
     myapp = MyApp()
     myapp.show()
     
-    try:
-        os.remove('temp.png')
-    finally:
-        shutil.rmtree('./__pycache__',ignore_errors=True)
+#    try:
+#       os.remove('temp.png')
+#    finally:
+#        shutil.rmtree('./__pycache__',ignore_errors=True)
     
     #Program exits with the same exit code as application
     sys.exit(App.exec_())      

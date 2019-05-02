@@ -90,7 +90,6 @@ class Backend(QThread):
 
     def store_img(self, signal):
         self.img = signal
-        
         self.retrieved_frame = True
         
     def crop_current_frame(self, current_frame):
@@ -117,6 +116,8 @@ class Backend(QThread):
                 self.emit(SIGNAL('frameget'),False)
                 
                 current_frame = self.crop_current_frame(self.img)
+
+                # print(current_frame)
                 
                 density = scan(current_frame,self.width)
                 
@@ -202,7 +203,7 @@ def scan(img,width):
     # =========================================================================
     density=[0,0,0,0]
     for i in range(len(img)):
-        vehicle_count = detection(img[i])
+        vehicle_count = detection(img[i],i)
         
         print('c'+str(vehicle_count[0])+' m'+str(vehicle_count[1])+' b'+str(vehicle_count[2])+' t'+str(vehicle_count[3]))
         
