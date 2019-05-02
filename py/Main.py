@@ -475,6 +475,11 @@ class MyApp(QMainWindow):
         self.ui.actionMinimize.triggered.connect(lambda : self.showMinimized())
         self.ui.actionExit.triggered.connect(lambda : self.close())
         self.ui.actionSave_Log.triggered.connect(lambda: self.save_log())
+        
+        self.ui.actionSave_Snapshot.triggered.connect(lambda : (self.ui.snapshot0.click(),
+                                            self.ui.snapshot1.click(),
+                                            self.ui.snapshot2.click(),
+                                            self.ui.snapshot3.click()))
     
     def save_log(self):
         content = self.ui.terminal.toPlainText()
@@ -502,6 +507,7 @@ class MyApp(QMainWindow):
         clear_logSC.setKey(QKeySequence('F5'))
         clear_logSC.setContext(Qt.ApplicationShortcut)
         clear_logSC.activated.connect(lambda : self.ui.terminal.clear())
+        
         
     def right_menu_bar_config(self):
         # =====================================================================
@@ -538,10 +544,9 @@ if __name__ == "__main__":
     myapp = MyApp()
     myapp.show()
     
-#    try:
-#       os.remove('temp.png')
-#    finally:
-#        shutil.rmtree('./__pycache__',ignore_errors=True)
+
+    shutil.rmtree('./__pycache__',ignore_errors=True)
+
     
     #Program exits with the same exit code as application
     sys.exit(App.exec_())      
