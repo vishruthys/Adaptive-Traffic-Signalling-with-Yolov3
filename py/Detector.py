@@ -32,16 +32,32 @@
 # =============================================================================
 
 
+
+
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 
 def getOutputsNames(net):
     layersNames = net.getLayerNames()
     return [layersNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
+# Darw a rectangle surrounding the object and its class name
+def draw_pred(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
+
+    label = str(classes[class_id])
+
+    color = COLORS[class_id]
+
+    cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 5)
+
+    cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+
+
 #Load names classes
 options = {"config": "./yolov3.cfg",
-           "weights": "/home/vishruthys/Project/yolov3.weights",
+           "weights": "/home/vishruthys/Projects/yolov3.weights",
            "classes": "./coco.names",
            }
 
@@ -55,16 +71,26 @@ COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 #Define network from configuration file and load the weights from the given weights file
 net = cv2.dnn.readNet(options["weights"],options["config"])
     
-def detection(image):
+def detection(image, video_index):
 
     blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
-
+    # image = np.asarray( image )
+    # print (image)
+    Width = image.get().shape[1]
+    Height = image.get().shape[0]
     net.setInput(blob)
+
     
     outs = net.forward(getOutputsNames(net))
 
+    class_ids = []
+    confidences = []
+    boxes = []
+    conf_threshold = 0.5
+    nms_threshold = 0.4
+
     car, bike, bus, truck = 0, 0, 0, 0
-    
+
     for out in outs:
 
         for detection in out:
@@ -76,16 +102,75 @@ def detection(image):
 
             if confidence > 0.5:
     
-                if class_id==2:                    
-                    car=car+1
-    
+                if class_id==2:
+                    center_x = int(detection[0] * Width)
+                    center_y = int(detection[1] * Height)
+                    w = int(detection[2] * Width)
+                    h = int(detection[3] * Height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
+                    car=car+1                    
+                        
                 elif class_id==3:
+                    bike=bike+1
+                    center_x = int(detection[0] * Width)
+                    center_y = int(detection[1] * Height)
+                    w = int(detection[2] * Width)
+                    h = int(detection[3] * Height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
                     bike=bike+1
     
                 elif class_id==5:
+                    center_x = int(detection[0] * Width)
+                    center_y = int(detection[1] * Height)
+                    w = int(detection[2] * Width)
+                    h = int(detection[3] * Height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
                     bus=bus+1
     
                 elif class_id==7:
+                    center_x = int(detection[0] * Width)
+                    center_y = int(detection[1] * Height)
+                    w = int(detection[2] * Width)
+                    h = int(detection[3] * Height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
                     truck=truck+1
 
+    # apply  non-maximum suppression algorithm on the bounding boxes
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
+
+    for i in indices:
+        j = i[0]
+       
+        box = (boxes[j])
+       
+        x = box[0]
+        y = box[1]
+        w = box[2]
+        h = box[3]
+        draw_pred(image, class_ids[j], confidences[j], round(x), round(y), round(x+w), round(y+h))
+
+
+    # image = np.asarray(image)
+    # cv2.imshow("edges", image)
+    # # cv2.waitKey()
+    # print(image)
+    
+    # cv2.imshow('',cv2.cvtColor(cv2.UMat(image), cv2.COLOR_RGB2GRAY))
+    cv2.imwrite('./detection_pred/detection{0}.png'.format(video_index),image)
     return car,bike,bus,truck
