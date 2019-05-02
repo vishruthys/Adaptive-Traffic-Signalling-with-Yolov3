@@ -662,6 +662,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSelect_Stream"/>
     <addaction name="separator"/>
     <addaction name="actionSave_Log"/>
+    <addaction name="actionSave_Snapshot"/>
     <addaction name="separator"/>
     <addaction name="actionMinimize"/>
     <addaction name="actionExit"/>
@@ -699,6 +700,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_Snapshot">
+   <property name="text">
+    <string>Save Snapshot</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>
